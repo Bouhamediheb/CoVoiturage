@@ -62,3 +62,14 @@ co-voiturage-platform/
 │ ├── class_diagram/
 │ └── ...
 └──────────────────── 
+
+## VI. TEAM :
+- BOUHAMED I.
+- HACHICHA K.
+- ABDENNADHER A.
+- TRIKI A.
+
+## V. INSTRUCTOR :
+- Pr. MAZZOUZI M.
+
+  
