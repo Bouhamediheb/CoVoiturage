@@ -41,27 +41,27 @@ Our team has agreed on the following technology stack:
 
 ## III. Folder Structure:
 
-co-voiturage-platform/
+co-voiturage-platform/<br>
+│<br>
+├── backend/<br>
+│ ├── app/<br>
+│ ├── config/<br>
+│ ├── database/<br>
+│ ├── public/<br>
+│ └── ...<br>
 │
-├── backend/
-│ ├── app/
-│ ├── config/
-│ ├── database/
-│ ├── public/
-│ └── ...
+├── frontend/<br>
+│ ├── public/<br>
+│ ├── src/<br>
+│ ├── node_modules/<br>
+│ └── ...<br>
 │
-├── frontend/
-│ ├── public/
-│ ├── src/
-│ ├── node_modules/
-│ └── ...
-│
-└── documentation/
-├── UML_diagrams/
-│ ├── use_case/
-│ ├── class_diagram/
-│ └── ...
-└──────────────────── 
+└── documentation/<br>
+├── UML_diagrams/<br>
+│ ├── use_case/<br>
+│ ├── class_diagram/<br>
+│ └── ...<br>
+└──────────────────── <br>
 
 ## VI. TEAM :
 - BOUHAMED I.
