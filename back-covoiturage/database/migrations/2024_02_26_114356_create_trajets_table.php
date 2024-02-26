@@ -8,7 +8,7 @@ return new class extends Migration
 {
   public function up(): void
   {
-    {Schema::create('Trajet', function (Blueprint $table)
+    {Schema::create('Trajets', function (Blueprint $table)
        {$table->id();
         $table->string('pointDepart');
         $table->string('pointArrive');
@@ -25,7 +25,7 @@ return new class extends Migration
         $table->unsignedBigInteger('idConducteur');
         $table->foreign('idConducteur')
         ->references('id')
-        ->on('conducteur')
+        ->on('users')
         ->onDelete('restrict')
         ->onUpdate('restrict');
 

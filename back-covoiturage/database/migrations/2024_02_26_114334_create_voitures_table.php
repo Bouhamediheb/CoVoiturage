@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('Voiture', function (Blueprint $table) {
+        Schema::create('Voitures', function (Blueprint $table) {
             $table->id();
             $table->string('marque');
             $table->string('modele');
@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('idConducteur');
             $table->foreign('idConducteur')
                 ->references('id')
-                ->on('conducteur')
+                ->on('users')
                 ->onDelete('restrict')
                 ->onUpdate('restrict');
             $table->timestamps();

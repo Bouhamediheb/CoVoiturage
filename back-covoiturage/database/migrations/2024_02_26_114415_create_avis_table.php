@@ -8,7 +8,7 @@ return new class extends Migration
 {
   public function up(): void
   {
-    {Schema::create('avis', function (Blueprint $table)
+    {Schema::create('Avis', function (Blueprint $table)
        {$table->id();
         $table->string('commentaire');
         $table->integer('note');
