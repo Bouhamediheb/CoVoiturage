@@ -1,8 +1,12 @@
 <template>
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+     
+
+    </head>
     <header>
         <div class="container">
             <div class="col6">
-            <!-- CoVoiturage -->
                 <a href="#" class="logo">
                     <img src="../../assets/img/logo.jpeg" alt="CoVoiturage" style="width: 70px; margin-top: -10px; height: 70px;">
                 </a>

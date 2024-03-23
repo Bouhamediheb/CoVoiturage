@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Landing  from "../components/HomePage/Landing.vue";
+import ListRides from "../components/Rides/ListRides.vue";
 
 
 const routes = [
@@ -17,6 +18,12 @@ const routes = [
       return import(/* webpackChunkName: "register" */ "../components//Register/RegisterView.vue");
     },
   },
+  {
+    path: "/rides",
+    name: "rides",
+    component: ListRides,
+  
+  }
 ];
 
 const router = createRouter({
