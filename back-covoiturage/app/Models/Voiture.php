@@ -9,8 +9,7 @@ class Voiture extends Model
 {
     use HasFactory;
 
-    
-    protected $table = 'Voiture'; 
+
     protected $fillable = [
         'marque',
         'modele',
@@ -21,12 +20,13 @@ class Voiture extends Model
         'fumeur',
         'baggage',
         'bebe',
-        'idConducteur ' 
+        'idConducteur '
     ];
 
     public $timestamps = true;
 
     public function User()
-    {return $this->belongsTo(User::class ,"idConducteur"); }
-
+    {
+        return $this->belongsTo(User::class, "idConducteur");
+    }
 }

@@ -12,8 +12,6 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-   
-    protected $table = 'User'; 
     protected $fillable = [
         'email',
         'nom',
@@ -26,6 +24,4 @@ class User extends Authenticatable
     ];
 
     public $timestamps = true;
-
-   
 }

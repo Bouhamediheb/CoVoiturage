@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Avis extends Model
 {
     use HasFactory;
-    protected $table = 'avis'; 
 
     protected $fillable = [
         'commentaire',
         'note',
         'idUser'
-        
+
     ];
     public $timestamps = true;
 
     public function IdUser()
-    {return $this->belongsTo(User::class ,"idUser"); }
+    {
+        return $this->belongsTo(User::class, "idUser");
+    }
 }

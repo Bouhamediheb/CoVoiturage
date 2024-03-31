@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 
 class Trajet extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
-    protected $table = 'Trajet'; 
 
     protected $fillable = [
         'pointDepart',
@@ -18,14 +19,19 @@ class Trajet extends Model
         'nbPlaces',
         'dateDepart',
         'idVoiture',
-        'idConducteur'
+        'idConducteur',
+        'etat'
     ];
 
     public $timestamps = true;
 
     public function Voiture()
-    {return $this->belongsTo(Voiture::class ,"idVoiture"); }
+    {
+        return $this->belongsTo(Voiture::class, "idVoiture");
+    }
 
     public function Conducteur()
-    {return $this->hasOne(User::class ,"idConducteur"); }
+    {
+        return $this->hasOne(User::class, "idConducteur");
+    }
 }
