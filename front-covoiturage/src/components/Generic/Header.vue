@@ -17,7 +17,10 @@
                     <li><a href="#">Drive</a></li>
                     <li><a href="#">Help</a></li>
                     <li><a href="#">Sign in</a></li>
-                    <li><button class="btn-r">Ride With carpool</button></li>
+                    <router-link to="/register">
+                    <li><button class="btn-r">Ride With Us</button></li>
+                    </router-link>
+
                 </ul>
             </div>
             <div class="clearfix"></div>
