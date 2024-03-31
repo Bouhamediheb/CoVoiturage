@@ -50,7 +50,7 @@
               </div>
   
               <div class="mb-3">
-                <label for="carMatricule" class="form-label">Car Matricule:</label>
+                <label for="carMatricule" class="form-label">Car License Plate:</label>
                 <input type="text" id="carMatricule" v-model="carInfo.matricule" class="form-control" required>
               </div>
   

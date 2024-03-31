@@ -61,7 +61,7 @@
 				<button class="btn-r">Read More</button>
 			</div>
 			<div class="col6">
-				<img src="../../assets/img/landing_image.png" style="width: 100%; margin-top: -100px;">
+				<img src="../../assets/img/test3.png" style="width: 80%; margin-top: -100px;">
 			</div>
 			<div class="clearfix"></div>
 		</div>
@@ -72,7 +72,7 @@
 
 			<h2 class="heading-2">Download Carpool</h2>
 			<div class="border"></div>
-			<img src="../../assets/img/landing_image.png" style="float:left; padding-left: 2%; width: 40%;">
+			<img src="../../assets/img/test4.webp" style="float:left; padding-left: 2%; width: 40%;">
 			<div class="content">
 				<h2 class="heading-3">Download the Carpool mobile application</h2>
 				<br>
@@ -353,17 +353,7 @@ header {
 	color: #fff;
 }
 
-.p5:after {
-	content: '';
-	position: absolute;
-	top: 75%;
-	right: 5%;
-	width: 50px;
-	height: 50px;
-	background: url(../../assets/img/landing_image.png);
-	background-size: 50px;
-	transform: rotateZ(184deg);
-}
+
 
 .content {
 	float: left;

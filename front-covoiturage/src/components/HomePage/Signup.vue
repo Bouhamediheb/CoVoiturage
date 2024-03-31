@@ -8,7 +8,7 @@
 			<button class="btn-r">Sign up Now</button>
 		</div>
 		<div class="col6">
-			<img src="../../assets/img/ride.avif" class="taxi-img">
+			<img src="../../assets/img/homelanding.png" class="taxi-img">
 		</div>
 		<div class="clearfix"></div>
 	</div>

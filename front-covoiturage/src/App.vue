@@ -1,10 +1,12 @@
 <template>
   <div>
     <Header/>
-    <div class="signup-container">
-      <router-view v-if="showSignup"/>
+    <div v-if="showSignup" class="signup-container">
+      <Signup/>
     </div>
-    <SearchRide/> 
+    <div v-if="showSearchRide" class="search-ride-container">
+      <SearchRide/>
+    </div>
     <div class="router-view">
       <RouterView/>
     </div>
@@ -16,6 +18,7 @@
 import Footer from './components/Generic/Footer.vue'
 import Landing from './components/HomePage/Landing.vue'
 import Header from './components/Generic/Header.vue'
+import Signup from './components/HomePage/Signup.vue'
 import SearchRide from './components/HomePage/SearchRide.vue'
 
 export default {
@@ -23,23 +26,23 @@ export default {
     Footer,
     Landing,
     Header,
+    Signup,
     SearchRide
   },
-  data() {
-    return {
-      showSignup: false
-    };
-  },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      vm.showSignup = to.path == '/';
-    });
-  },
-};
+  computed: {
+    showSignup() {
+      return this.$route.path === '/home' || this.$route.path === '/';
+    },
+    showSearchRide() {
+      return this.$route.path === '/home' || this.$route.path === '/';
+    }
+  }
+}
 </script>
 
 <style scoped>
-.signup-container {
+.signup-container,
+.search-ride-container {
   display: block;
   clear: both;
 }
