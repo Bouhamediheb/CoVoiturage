@@ -101,14 +101,10 @@
   </template>
   
   <script>
-import 'vue-toast-notification/dist/theme-default.css'; // Import the default theme CSS
-import { useToast } from "vue-toastification";
+
 
   export default {
-    setup() {
-        const toast = useToast();
-        return { toast }
-    },
+   
   
     
     data() {
@@ -148,27 +144,7 @@ import { useToast } from "vue-toastification";
         });
         
       },
-      triggerToast() {
-        console.log("Hi");
-    
-     this.toast("Hi from LogRocket", {
-       position: "top-right",
-       timeout: 5000,
-       closeOnClick: true,
-       pauseOnFocusLoss: true,
-       pauseOnHover: true,
-       draggable: true,
-       draggablePercent: 0.6,
-       showCloseButtonOnHover: false,
-       hideProgressBar: true,
-       closeButton: "button",
       
-       rtl: false
-     });
-
-
-
-    }
     }
   };
   </script>

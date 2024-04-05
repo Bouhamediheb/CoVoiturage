@@ -1,127 +1,86 @@
 <template>
-  <div class="container-fluid d-flex justify-content-center spaced ml-5">
-    <div class="row mt-2 px-3">
-      <div
-        v-for="ride in rides.value"
-        :key="ride.id"
-        class="col-sm-6 col-md-4 col-lg-3 mb-3"
-      >
-        <div class="card" style="width: 15rem">
-          <img
-            src="https://png.pngtree.com/png-vector/20190701/ourmid/pngtree-route-icon-in-trendy-style-isolated-background-png-image_1524893.jpg"
-            class="card-img-top"
-            width="100%"
-          />
-          <div class="card-body pt-0 px-2">
-            <div
-              class="d-flex flex-row justify-content-between mb-0 pl-3 pr-3 mt-1"
-            >
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Chauffeur</small>
-                <h6>
-                  {{ getDriver(ride.idConducteur).nom }}
-                  {{ getDriver(ride.idConducteur).prenom }}
-                </h6>
+  <div class="container-fluid">
+    <div class="d-flex justify-content-center spaced">
+      <div class="row mt-2 px-3">
+        <div
+          v-for="ride in rides"
+          :key="ride.id"
+          class="col-sm-6 col-md-4 col-lg-3 mb-3"
+        >
+          <div class="card">
+            <img
+              src="https://sf1.autoplus.fr/wp-content/uploads/autoplus/2021/12/27715_1630853_k2_k1_3760701-750x410.jpg"
+              class="card-img-top"
+              width="100%"
+              alt="Card image"
+            />
+            <div class="card-body pt-0 px-2">
+              <div class="d-flex flex-row justify-content-between mb-0 pl-3 pr-3 mt-1">
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Chauffeur</small>
+                </div>
               </div>
-            </div>
-            <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Téléphone</small>
-                <h6>{{ getDriver(ride.idConducteur).telephone }}</h6>
+              <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Téléphone</small>
+                </div>
               </div>
-            </div>
-            <div class="d-flex flex-row justify-content-between px-3 pb-1">
-              <div class="d-flex flex-column">
-                <span class="text-muted mb-1">Véhicule</span>
-                <h6>
-                  {{ getVehicle(ride.idVoiture).marque }}
-                  {{ getVehicle(ride.idVoiture).modele }}
-                </h6>
+              <div class="d-flex flex-row justify-content-between px-3 pb-1">
+                <div class="d-flex flex-column">
+                  <span class="text-muted mb-1">Véhicule</span>
+                </div>
+                <div class="d-flex flex-column">
+                  <span class="text-muted mb-1">Série</span>
+                </div>
               </div>
-              <div class="d-flex flex-column">
-                <span class="text-muted mb-1">Série</span>
-                <h6>{{ getVehicle(ride.idVoiture).matricule }}</h6>
+              <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Date</small>
+                  <h6>{{ ride.dateDepart }}</h6>
+                </div>
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Heure</small>
+                <h6 v-if="rideWithVoiture(ride).value">{{ rideWithVoiture(ride).value }} hh</h6>
+                </div>
               </div>
-            </div>
-            <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Date</small>
-                <h6>{{ ride.dateDepart }}</h6>
+              <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Départ</small>
+                  <h6>{{ ride.pointDepart }}</h6>
+                </div>
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Arrivée</small>
+                  <h6>{{ ride.pointArrive }}</h6>
+                </div>
               </div>
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Heure</small>
-                <h6>12:00</h6>
+              <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Nombre de places</small>
+                  <h6>{{ ride.nbPlaces }}</h6>
+                </div>
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Places restantes</small>
+                  <h6>2</h6>
+                </div>
               </div>
-            </div>
-            <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Départ</small>
-                <h6>{{ ride.pointDepart }}</h6>
-              </div>
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Arrivée</small>
-                <h6>{{ ride.pointArrive }}</h6>
-              </div>
-            </div>
-            <div class="d-flex flex-row justify-content-between pl-3 pr-3 mid">
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Nombre de places</small>
-                <h6>{{ ride.nbPlaces }}</h6>
-              </div>
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Places restantes</small>
-                <h6>2</h6>
-              </div>
-            </div>
-            <hr class="mt-1 mx-1" />
-            <div class="d-flex flex-col justify-content-between pl-3 pr-3 pb-1">
-              <div class="d-flex flex-column mid">
-                <span class="text-muted">Options :</span>
-                <div class="d-flex flex-column mt-2">
-                  <div
-                    v-if="getVoitures(ride.idVoiture).climatisation == 1"
-                    class="d-flex flex-row align-items-center"
-                  >
-                    <i class="fas fa-snowflake mr-2"></i>
-                    <h5 class="mb-0">Climatisation activée</h5>
-                  </div>
-                  <div
-                    v-if="getVoitures(ride.idVoiture).fumeur == 1"
-                    class="d-flex flex-row align-items-center"
-                  >
-                    <i class="fas fa-smoking mr-2"></i>
-                    <h5 class="mb-0">Accepte les fumeurs</h5>
-                  </div>
-                  <div
-                    v-if="getVoitures(ride.idVoiture).animaux == 1"
-                    class="d-flex flex-row align-items-center"
-                  >
-                    <i class="fas fa-paw mr-2"></i>
-                    <h5 class="mb-0">Accepte les animaux</h5>
-                  </div>
-                  <div
-                    v-if="getVoitures(ride.idVoiture).bagage == 0"
-                    class="d-flex flex-row align-items-center"
-                  >
-                    <i class="fas fa-suitcase mr-2"></i>
-                    <h5 class="mb-0">Baggage leger</h5>
-                  </div>
-                  <div v-else class="d-flex flex-row align-items-center">
-                    <i class="fas fa-suitcase mr-2"></i>
-                    <h5 class="mb-0">Baggage lourd</h5>
+              <hr class="mt-1 mx-1" />
+              <div class="d-flex flex-col justify-content-between pl-3 pr-3 pb-1">
+                <div class="d-flex flex-column mid">
+                  <span class="text-muted">Options :</span>
+                  <div class="d-flex flex-column mt-2">
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="d-flex flex-row justify-content-between pl-3 pr-3 pt-2">
-              <div class="d-flex flex-column">
-                <small class="text-muted mb-1">Montant</small>
-                <h6>{{ ride.montant }} TND</h6>
+              <div class="d-flex flex-row justify-content-between pl-3 pr-3 pt-2">
+                <div class="d-flex flex-column">
+                  <small class="text-muted mb-1">Montant</small>
+                  <h6>{{ ride.montant }} DT</h6>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card-footer d-flex justify-content-center">
-            <button class="btn reserve">Réserver votre place!</button>
+            <div class="card-footer d-flex justify-content-center">
+              <button class="btn reserve">Réserver votre place!</button>
+            </div>
           </div>
         </div>
       </div>
@@ -130,49 +89,40 @@
 </template>
 
 <script setup>
-import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
 
 const rides = ref([]);
+const ridesLoaded = ref(false);
 
-onMounted(() => {
-  fetchRides();
+onMounted(async () => {
+  try {
+    const response = await axios.get('http://localhost:8000/api/trajets');
+    rides.value = response.data;
+    ridesLoaded.value = true;
+  } catch (error) {
+    console.error(error);
+  }
 });
 
-const fetchRides = () => {
-  axios
-    .get("http://localhost:8000/api/trajets")
-    .then((response) => {
-      rides.value = response.data;
-      console.log(rides.value);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+const getVoitures = async (id) => {
+  try {
+    console.log("iam the id" , id);
+    const response = await axios.get(`http://localhost:8000/api/voitures/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
-const getVoitures = (id) => {
-  axios
-    .get(`http://localhost:8000/api/voitures/${id}`)
-    .then((response) => {
-      console.log(response.data);
-      return response.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const getConducteur = (id) => {
-  axios
-    .get(`http://localhost:8000/api/users/${id}`)
-    .then((response) => {
-      console.log(response.data);
-      return response.data;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+const rideWithVoiture = (ride) => {
+  return computed(async () => {
+    const voiture = await getVoitures(ride.id);
+    const final = voiture.matricule;
+    return { ...ride, final };
+    
+  });
 };
 </script>
 
@@ -184,9 +134,30 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-sm-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.col-md-4 {
+  flex: 0 0 33.333%;
+  max-width: 33.333%;
+}
+
+.col-lg-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+}
+
 .card {
   width: 250px;
   border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .card-img-top {
