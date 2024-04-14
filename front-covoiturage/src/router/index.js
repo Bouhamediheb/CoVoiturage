@@ -14,6 +14,7 @@ const routes = [
     name: "Landing",
     component: Landing,
     
+    
   },
   {
     path: "/register",
@@ -57,6 +58,11 @@ const routes = [
     name: "about",
     component: About,
   },
+  {
+    path: "/:pathMatch(.*)*",
+    redirect: "/",
+  },
+
   
 
 ];

@@ -32,7 +32,7 @@
             <a href="#">
                 <i class="fas fa-user-circle" style="font-size: 20px;"></i>
             </a>
-            <span class="ml-4">{{ username }}</span>
+            <span class="ml-4">{{ nom }} {{ prenom }}</span>
             <span class="ml-4"></span>
             <router-link to="/logout">
                 <button class="btn-r">Logout</button>
@@ -405,6 +405,7 @@ header {
 import { ref } from 'vue';
 
 
+
 //change active class on click
 document.addEventListener('DOMContentLoaded', function () {
     const links = document.querySelectorAll('.bottomnav li');
@@ -416,8 +417,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-const isLogged = ref(true);
-const username = ref("KORIM");
+const nom = localStorage.getItem('nom');
+const prenom = localStorage.getItem('prenom');
+
+const isLogged = ref(localStorage.isLoggedin);
 
 
 

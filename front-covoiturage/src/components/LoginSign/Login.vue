@@ -60,6 +60,7 @@ const login = () => {
       localStorage.setItem("prenom", response.data.user.prenom);
       localStorage.setItem("email", response.data.user.email);
       localStorage.setItem("user_id", response.data.user.id);
+      localStorage.setItem("isLoggedin", true);
 
       setTimeout(() => {
         router.push({ name: "Landing" });
