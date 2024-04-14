@@ -6,8 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\VoitureController;
 use App\Http\Controllers\TrajetController;
-
-
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\LoginController;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -46,3 +46,8 @@ Route::post('/voitures', [VoitureController::class, 'store']);
 Route::put('/voitures/{id}', [VoitureController::class, 'update']);
 Route::delete('/voitures/{id}', [VoitureController::class, 'destroy']);
 Route::get('/voitures/driver/{id}', [VoitureController::class, 'getVoitureByDriver']);
+
+//Route for Auth
+Route::post('/login', [LoginController::class, 'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'logout']);
