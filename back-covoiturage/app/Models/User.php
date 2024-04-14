@@ -16,12 +16,15 @@ class User extends Authenticatable
         'email',
         'nom',
         'prenom',
-        'mdp',
+        'password',
         'telephone',
         'role',
         'etat',
         'avis',
     ];
 
-    public $timestamps = true;
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
 }

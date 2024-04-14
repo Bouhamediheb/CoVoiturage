@@ -20,14 +20,14 @@ class RegisterController extends Controller
             'nom' => 'required',
             'prenom' => 'required',
             'email' => 'required|email|unique:users,email',
-            'mdp' => 'required|min:6',
+            'password' => 'required|min:6',
             'telephone' => 'required',
         ]);
         $user = User::create([
             'nom' => $request->nom,
             'prenom' => $request->prenom,
             'email' => $request->email,
-            'mdp' => Hash::make($request->mdp),
+            'password' => Hash::make($request->password),
             'telephone' => $request->telephone,
         ]);
 

@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -17,20 +18,24 @@ class LoginController extends Controller
     {
         $request->validate([
             'email' => 'required|email',
-            'mdp' => 'required',
+            'password' => 'required',
         ]);
-        if (Auth::attempt($request->only('email', 'mdp'))) {
+        if (Auth::attempt($request->only('email', 'password'))) {
             $user = Auth::user();
             $token = $user->createToken('token-name')->plainTextToken;
+
             return response()->json([
                 'status' => true,
                 'message' => 'User Logged In Successfully',
                 'token' => $token,
                 'user' => $user
-            ], 200);
+            ]);
         }
         throw ValidationException::withMessages([
             'email' => ['The provided credentials are incorrect.'],
+
+
+
         ]);
     }
     public function logout(Request $request)
