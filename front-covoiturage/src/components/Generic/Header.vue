@@ -6,44 +6,48 @@
 
     </head>
     <header>
-        <div class="container">
+        <div class="container ">
             <div class="col6">
                 <a href="#" class="logo">
-                    <img src="../../assets/img/logo.jpeg" alt="CoVoiturage"
-                        style="width: 70px; margin-top: -10px; height: 70px;">
+                    <img src="../../assets/img/logo.jpeg" alt="CoVoiturage" style="width: 70px;height:80px" class="pt-3">
                 </a>
             </div>
 
             <div class="col6">
-    <ul class="topnav">
-       
+                <ul class="topnav mt-2">
 
-        <li v-if="!isLogged">
-            <router-link to="/login">
-                <button class="btn-r">Sign In</button>
-            </router-link>
-            <span class="ml-4"></span>
-            <router-link to="/rides">
-                <button class="btn-r">Ride With Us</button>
-            </router-link>
-        </li>
 
-        <li v-else>
-            <a href="#">
-                <i class="fas fa-user-circle" style="font-size: 20px;"></i>
-            </a>
-            <span class="ml-4">{{ nom }} {{ prenom }}</span>
-            <span class="ml-4"></span>
-            <router-link to="/logout" >
-                <button class="btn-r" @click="logout" v-if="isLogged">Logout</button>
-            </router-link>
-        </li>
-    </ul>
-</div>
+                    <li v-if="!isLogged">
+                        <router-link to="/login">
+                            <button class="btn-r">Sign In</button>
+                        </router-link>
+                        <span class="ml-4"></span>
+                        <router-link to="/rides">
+                            <button class="btn-r">Ride With Us</button>
+                        </router-link>
+                    </li>
+
+                    <li v-else>
+                        <div class="dropdown">
+                            <a class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                <span class="ml-4">Bienvenue , {{ nom }} {{ prenom }}</span>
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <router-link to="/profile" class="dropdown-item">Add preferences</router-link>
+                                <router-link to="/settings" class="dropdown-item">Settings</router-link>
+                                <router-link to="/logout" class="dropdown-item" @click="logout">Logout</router-link>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
             <div class="clearfix"></div>
         </div>
 
-        <div class="header-bottom">
+
+        
+      <div class="header-bottom">
             <div class="container">
                 <ul class="bottomnav">
                     <router-link to="/">
@@ -427,6 +431,7 @@ const logout = () => {
     localStorage.removeItem('nom');
     localStorage.removeItem('prenom');
     localStorage.removeItem('isLoggedin');
+    localStorage.removeItem('token');
 
     window.location.href = '/';
     console.log('logout');

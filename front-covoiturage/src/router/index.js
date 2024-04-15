@@ -7,6 +7,7 @@ import Signup from "../components/LoginSign/Signup.vue";
 import Contact from "../components/Generic/Contact.vue";
 import Terms from "../components/Generic/TermsOfUse.vue";
 import About from "../components/Generic/About.vue"
+import PublishRide  from "../components/Rides/PublishRide.vue";
 
 const isAuthenticated = () => {
   if (localStorage.getItem("token")) {
@@ -63,13 +64,7 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login,
-    beforeEnter: (to, from, next) => {
-      if (isAuthenticated()) {
-        next({ name: "Landing" });
-      } else {
-        next();
-      }
-    },
+    
   },
   {
     path: "/signup",
@@ -101,6 +96,18 @@ const routes = [
   {
     path: "/:pathMatch(.*)*",
     redirect: "/",
+  },
+  {
+    path: "/publish",
+    name: "publish",
+    component: PublishRide,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next();
+      } else {
+        next({ name: "login" });
+      }
+    },
   },
 
   

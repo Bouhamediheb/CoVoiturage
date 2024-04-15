@@ -1,6 +1,8 @@
 <template>
-  <section class="sec-1" style="height: 700px;">
-    <div class="container">
+ 
+  <section class="sec-1" style="height: 1000px;">
+
+    <div class="container"style="height: 250px;">
       <div class="col6">
         <img src="../../assets/img/ride.png" class="taxi-img">
       </div>
@@ -8,17 +10,35 @@
         <div class="blablacar-container">
           <div class="form-wrapper">
             <div class="card">
-              <h2 class="blablacar-heading">Publish a Ride</h2>
+              <h2 class="blablacar-heading">Publish your Ride</h2>
               <div class="form-content">
                 <form @submit.prevent="publishRide">
                   <div class="form-group">
                     <label for="origin">Origin:</label>
-                    <input type="text" id="origin" v-model="origin" placeholder="Enter your starting location" class="form-control">
-                  </div>
+                    <input type="text" id="origin" v-model="origin" placeholder="Enter your starting location" class="form-control" @input="filterOrigin">
+                    <div v-if="(originFiltered.length > 0) && originDropdownVisible" class="autocomplete" v-show="originDropdownVisible"> 
+                      <ul>
+                        <li v-for="(city, index) in originFiltered" :key="index" @click="selectOrigin(city)">{{ city }}</li>
+                     
+                      </ul>              
+                    </div>   
+                     </div>
                   <div class="form-group">
                     <label for="destination">Destination:</label>
-                    <input type="text" id="destination" v-model="destination" placeholder="Enter your destination" class="form-control">
+                    <input type="text" id="destination" v-model="destination" placeholder="Enter your destination" class="form-control" @input="filterDestination">
+                    <div v-if="(destinationFiltered.length > 0) &&  destinationDropdownVisible" class="autocomplete" v-show="destinationDropdownVisible">
+                      <ul>
+                        <li v-for="(city, index) in destinationFiltered" :key="index" @click="selectDestination(city)">{{ city }}</li>
+                      </ul>
+                    </div>
                   </div>
+                  <div class="form-group">
+  <label for="car">Choose a Car:</label>
+  <select id="car" v-model="selectedCar" class="form-control">
+    <option v-for="(car, index) in cars" :key="index" :value="car.id">{{ car.modele }} {{ car.matricule }}  </option>
+  </select>
+</div>                 
+
                   <div class="form-group">
                     <label for="passengers">Number of Passengers:</label>
                     <input type="number" id="passengers" v-model.number="numPassengers" min="1" max="4" placeholder="Enter available seats" class="form-control">
@@ -27,7 +47,18 @@
                     <label for="departureDate">Departure Date:</label>
                     <input type="date" id="departureDate" v-model="departureDate" class="form-control">
                   </div>
-                  <button type="submit" class="btn btn-primary">Publish Ride</button>
+
+                  <div class="form-group">
+                    <label for="departureDate"> Fee :</label>
+                    <input type="number" id="fee" v-model="fee" class="form-control">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="departureDate"> Description :</label>
+                    <textarea id="description" v-model="description" class="form-control"></textarea>
+                  </div>
+                  
+                  <button type="submit" class="btn save-change" style="height: 40px;">Publish Ride</button>
                 </form>
               </div>
             </div>
@@ -40,19 +71,138 @@
 </template>
 
 <script>
+import axios from 'axios';
+import { ref } from 'vue';
+
+
+
 export default {
   data() {
     return {
       origin: "",
       destination: "",
+      // Add lists for filtered origin and destination
+      originFiltered: [],
+      destinationFiltered: [],
       numPassengers: 1,
       departureDate: null,
+      governorates: [
+        "Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille",
+        "A","aaa","aze","azee","Rennes", "Reims", "Le Havre", "Saint-Étienne", "Toulon", "Grenoble", "Angers", "Dijon", "Brest", "Le Mans",
+        "Nîmes", "Aix-en-Provence", "Clermont-Ferrand", "Tours", "Amiens", "Limoges", "Villeurbanne", "Metz", "Besançon",
+        "Perpignan", "Orléans", "Caen", "Mulhouse", "Boulogne-Billancourt", "Rouen", "Nancy", "Argenteuil", "Montreuil",
+        "Saint-Denis", "Roubaix", "Avignon", "Tourcoing", "Poitiers", "Nanterre", "Créteil", "Versailles", "Pau",
+        "Courbevoie", "Vitry-sur-Seine", "Asnières-sur-Seine", "Colombes", "Aulnay-sous-Bois", "La Rochelle", "Rueil-Malmaison",
+        "Antibes", "Saint-Maur-des-Fossés", "Calais", "Champigny-sur-Marne", "Aubervilliers", "Béziers", "Bourges", "Cannes",
+        "Saint-Nazaire", "Dunkerque", "Quimper", "Valence", "Colmar", "Drancy", "Mérignac", "Ajaccio", "Levallois-Perret",
+        "Troyes", "Neuilly-sur-Seine", "Issy-les-Moulineaux", "Villeneuve-d'Ascq", "Noisy-le-Grand", "Antony", "Niort", "Lorient",
+        "Sarcelles", "Chambéry", "Saint-Quentin", "Pessac", "Vénissieux", "Cergy", "La Seyne-sur-Mer", "Clichy", "Beauvais",
+        "Cholet", "Hyères", "Ivry-sur-Seine", "Montauban", "Vannes", "La Roche-sur-Yon", "Charleville-Mézières", "Pantin",
+        "Laval", "Maisons-Alfort", "Bondy", "Évry"
+      ],
+      originDropdownVisible: false, // Track visibility of origin dropdown
+      destinationDropdownVisible: false ,
+      cars: [],
+      selectedCar: null,
+      fee: 0,
+      description: "",
+      idConducteur: null,
+      idVoiture: null,
     };
   },
+  mounted() {
+    document.addEventListener('click', this.closeDropdowns);
+    console.log("hello");
+
+
+    this.user_id = localStorage.getItem('user_id');
+
+    axios.get('http://localhost:8000/api/voitures/driver/'+ this.user_id)
+    .then(response => {
+      console.log(response.data);
+      this.cars = response.data;
+
+    })
+
+
+
+    
+
+  },
+  beforeDestroy() {
+    // Remove the event listener when the component is destroyed
+    document.removeEventListener('click', this.closeDropdowns);
+  },
   methods: {
+    handleClickOutside(event) {
+      // Check if the click event target is not the origin input or dropdown
+      if (!this.$refs.originInput.contains(event.target) && !this.$refs.originDropdown.contains(event.target)) {
+        this.originDropdownVisible = false; // Close origin dropdown
+      }
+      // Check if the click event target is not the destination input or dropdown
+      if (!this.$refs.destinationInput.contains(event.target) && !this.$refs.destinationDropdown.contains(event.target)) {
+        this.destinationDropdownVisible = false; // Close destination dropdown
+      }
+    },
+    closeDropdowns(event) {
+      // Check if the clicked element is not inside the origin or destination dropdowns
+      const originDropdown = document.getElementById('origin-dropdown');
+      const destinationDropdown = document.getElementById('destination-dropdown');
+      console.log("closing");
+      
+      if (originDropdown && !originDropdown.contains(event.target)) {
+        this.originDropdownVisible = false; // Close origin dropdown
+      }
+      
+      if (destinationDropdown && !destinationDropdown.contains(event.target)) {
+        this.destinationDropdownVisible = false; // Close destination dropdown
+      }
+    },
+    filterOrigin() {
+      // Filter the origin list based on user input
+      this.originFiltered = this.governorates
+        .filter(city => city.toLowerCase().startsWith(this.origin.toLowerCase()))
+        .slice(0, 5); // Limit to the first 5 items
+      this.originDropdownVisible = true; // Show origin dropdown
+    },
+    filterDestination() {
+      // Filter the destination list based on user input
+      this.destinationFiltered = this.governorates
+        .filter(city => city.toLowerCase().startsWith(this.destination.toLowerCase()))
+        .slice(0, 5); // Limit to the first 5 items
+      this.destinationDropdownVisible = true; // Show destination dropdown
+    },
+    selectOrigin(city) {
+      this.origin = city;
+      this.originDropdownVisible = false; // Close origin dropdown when city is selected
+    },
+    selectDestination(city) {
+      this.destination = city;
+      this.destinationDropdownVisible = false; // Close destination dropdown when city is selected
+    },
     publishRide() {
-      alert(`Publishing ride from ${this.origin} to ${this.destination} for ${this.numPassengers} passengers on ${this.departureDate}.`);
+      const ride = {
+        pointDepart: this.origin,
+        pointArrive: this.destination,
+        nbPlaces: this.numPassengers,
+        montant: this.fee,
+        description: this.description,
+        idConducteur: this.user_id,
+        idVoiture: this.selectedCar,
+        dateDepart: this.departureDate,
+      };
+      console.log(ride);
+      axios.post('http://localhost:8000/api/trajets', ride)
+      .then(response => {
+        console.log(response.data);
+        this.$router.push({ name: 'Rides' });
+      })
+      .catch(error => {
+        console.log(error);
+      });
     }
+  
+
   }
 }
 </script>
@@ -65,8 +215,7 @@ export default {
 	--white:#fff;
 }
 .sec-1 {
-  padding-top: 20px; /* Adjusted padding top */
-  padding-bottom: 50px; /* Keep the same padding bottom */
+  padding-top: 100px; /* Adjusted padding top */
   display: block; /* Added flexbox for column ordering */
   flex-direction: column-reverse; /* Reverse order of child elements */
 }
@@ -321,8 +470,72 @@ header{padding: 10px 0px 0px 0px;}
     background-color: #ddd;
     cursor: not-allowed;
   }
+  .save-change {
+  background: #ebb14d;
+  color: white;
+  border: none;
+  font-size: 16px;
+  float: right;
+  cursor: pointer;
+  width: 200px;
+}
+.autocomplete {
+  position: relative;
+}
+.autocomplete ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  background-color: #f1f1f1;
+  width: 100%;
+  z-index: 1;
+}
+.autocomplete li {
+  padding: 10px;
+  cursor: pointer;
+}
+.autocomplete li:hover {
+  background-color: #ddd;
+}
 
+nav {
+  margin-left: 22%;
+  margin-right: 22%;
+  border-radius: 40%;
+  border-color: 1px solid #ced4da;
+}
 
+.ribbon {
+  color: white;
+  padding: 10px 0;
+  margin-top: 10px;
+  border-radius: 10px; /* Add border radius */
+  border: 1px solid #ced4da; /* Add border */
 
+  
+}
+
+.ribbon .container {
+  display: flex;
+  justify-content: flex-start; /* Align links to the left */
+}
+
+.ribbon .container .nav-link {
+  color: black;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  margin-right: 10px; /* Add space between links */
+}
+
+.ribbon .container .separator {
+  margin-top: 5px;
+  color: black;
+  margin-right: 10px; /* Add space between links */
+}
+
+.ribbon .container .nav-link:hover {
+  color: var(--darkblue)
+}
 
 </style>

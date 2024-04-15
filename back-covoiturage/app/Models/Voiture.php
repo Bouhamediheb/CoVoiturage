@@ -20,7 +20,7 @@ class Voiture extends Model
         'fumeur',
         'baggage',
         'bebe',
-        'idConducteur '
+        'idConducteur'
     ];
 
     public $timestamps = true;

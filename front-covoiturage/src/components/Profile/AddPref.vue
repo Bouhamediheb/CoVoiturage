@@ -11,30 +11,8 @@
   
     <div class="container mt-5">
       
-      <div class="row justify-content-center">
-        <div class="col-md-10">
-          <fieldset class="rounded p-4 custom-border">
-            <legend class="legend-label" >Personal Information</legend>
-            <form @submit.prevent="submitForm">
-          
-              <div class="mb-3">
-                <label for="profilePicture" class="form-label">Profile Picture:</label>
-                <input type="file" id="profilePicture" @change="handleFileUpload" accept="image/*" class="form-control">
-              </div>
-  
-              <div class="mb-3">
-                <label for="age" class="form-label">Age:</label>
-                <input type="number" id="age" v-model="age" class="form-control" required>
-              </div>
-  
-              <div class="mb-3">
-                <label for="phoneNumber" class="form-label">Phone Number:</label>
-                <input type="tel" id="phoneNumber" v-model="phoneNumber" class="form-control" required placeholder="ie : +21699999999">
-              </div>
-            </form>
-          </fieldset>
-        </div>
-      </div>
+    
+     
   
       <div class="row justify-content-center mt-4">
         <div class="col-md-10">
@@ -100,23 +78,37 @@
                 <label for="smoking" class="form-check-label">Smoking allowed?</label>
               </div>
   
-              <div class="form-check mb-3">
-                <input type="checkbox" id="wifi" v-model="carOptions.wifi" class="form-check-input">
-                <!-- icon -->
-                <i class="fas fa-wifi"></i>
-                <span class="ml-2"> </span>
-
-                <label for="wifi" class="form-check-label">WiFi available?</label>
-              </div>
+           
   
               <div class="form-check mb-3">
-                <input type="checkbox" id="music" v-model="carOptions.music" class="form-check-input">
+                <input type="checkbox" id="baby" v-model="carOptions.bebe" class="form-check-input">
                 <!-- icon -->
-                <i class="fas fa-music"></i>
+                <i class="fas fa-baby"></i>
                 <!-- space -->
                  <span class="ml-2"> </span>
-                <label for="music" class="form-check-label">Music system?</label>
+                <label for="baby" class="form-check-label">Baby seat?</label>
               </div>
+
+              <div class="form-check mb-3">
+                <input type="checkbox" id="luggage" v-model="carOptions.luggage" class="form-check-input">
+                <!-- icon -->
+                <i class="fas fa-suitcase"></i>
+                <!-- space -->
+                 <span class="ml-2"> </span>
+                <label for="luggage" class="form-check-label">Heavy Luggage?</label>
+              </div>
+
+              <div class="form-check mb-3">
+                <input type="checkbox" id="airC" v-model="carOptions.airC" class="form-check-input">
+                <!-- icon -->
+                <i class="fas fa-wind"></i>
+                <!-- space -->
+                 <span class="ml-2"> </span>
+                <label for="airC" class="form-check-label">Air Conditionning?</label>
+              </div>
+
+
+            
             </form>
           </fieldset>
         </div>
@@ -124,13 +116,15 @@
   
       <div class="row justify-content-center mt-4 mb-4">
         <div class="col-md-10 text-center">
-            <button class="btn save-change" >Save</button>
+            <button class="btn save-change" @click="submitForm()" >Save</button>
         </div>
       </div>
     </div>
   </template>
   
   <script >
+import axios from 'axios';
+
 
   export default {
     setup() {
@@ -141,9 +135,7 @@
     data() {
       return {
      
-        profilePicture: null,
-        age: '',
-        phoneNumber: '',
+     
         carInfo: {
           name: '',
           manufacturer: '',
@@ -153,8 +145,9 @@
         carOptions: {
           animals: false,
           smoking: false,
-          wifi: false,
-          music: false
+          luggage: false,
+          bebe: false,
+          airC: false
         },
         currentLocation: "Home / AddPreferences", // Set the default current location
       };
@@ -166,14 +159,84 @@
       },
       submitForm() {
         console.log({
-          firstName: this.firstName,
-          lastName: this.lastName,
-          profilePicture: this.profilePicture,
-          age: this.age,
-          phoneNumber: this.phoneNumber,
-          carInfo: this.carInfo,
-          carOptions: this.carOptions
+          carName : this.carInfo.name,
+          carManufacturer : this.carInfo.manufacturer,
+          carMatricule : this.carInfo.matricule,
+          carYear : this.carInfo.year,
+          animals : this.carOptions.animals,
+          smoking : this.carOptions.smoking,
+          luggage : this.carOptions.luggage,
+          bebe : this.carOptions.bebe,
+          airC : this.carOptions.airC
+
         });
+        //if true = 1, if false = 0
+        if(this.carOptions.animals == true){
+          this.carOptions.animals = 1;
+        }
+        else{
+          this.carOptions.animals = 0;
+        }
+
+        if(this.carOptions.smoking == true){
+          this.carOptions.smoking = 1;
+        }
+        else{
+          this.carOptions.smoking = 0;
+        }
+
+        if(this.carOptions.luggage == true){
+          this.carOptions.luggage = 1;
+        }
+        else{
+          this.carOptions.luggage = 0;
+        }
+
+        if(this.carOptions.bebe == true){
+          this.carOptions.bebe = 1;
+        }
+        else{
+          this.carOptions.bebe = 0;
+        }
+
+        if(this.carOptions.airC == true){
+          this.carOptions.airC = 1;
+        }
+        else{
+          this.carOptions.airC = 0;
+        }
+
+        console.log({
+          carName : this.carInfo.name,
+          carManufacturer : this.carInfo.manufacturer,
+          carMatricule : this.carInfo.matricule,
+          carYear : this.carInfo.year,
+          animals : this.carOptions.animals,
+          smoking : this.carOptions.smoking,
+          luggage : this.carOptions.luggage,
+          bebe : this.carOptions.bebe,
+          airC : this.carOptions.airC,
+          idConducteur : localStorage.getItem('user_id'),
+
+        });
+        axios.post('http://localhost:8000/api/voitures', {
+          modele : this.carInfo.name,
+          marque : this.carInfo.manufacturer,
+          matricule : this.carInfo.matricule,
+          annee : this.carInfo.year,
+          animaux : this.carOptions.animals,
+          fumeur : this.carOptions.smoking,
+          baggage : this.carOptions.luggage,
+          bebe : this.carOptions.bebe,
+          climatisation : this.carOptions.airC,
+          idConducteur : localStorage.getItem('user_id'),
+        })
+          .then(response => {
+            console.log(response);
+          })
+          .catch(error => {
+            console.log(error);
+          });
         
       },
    

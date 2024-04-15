@@ -1,152 +1,254 @@
 <template>
-
   <div>
-    <br>
+    <br />
     <span class="mt-5"> </span>
 
-    <div class="ride-picker" style="width: 1400px; max-width: 100%; margin: 0 auto;">
+    <div
+      class="ride-picker"
+      style="width: 1400px; max-width: 100%; margin: 0 auto"
+    >
       <div class="ride-picker-title">
         <h2 class="heading-2">Pick your ride from where you are</h2>
         <span class="mt-2"> </span>
 
-        <br>
+        <br />
 
         <div class="ride-picker">
           <div class="input-box">
-                <i class="fa fa-map-marker"></i>
-                <input type="text" placeholder="Starting Point" v-model="startPoint" @input="filterStartPoint" class="ride-picker__input">
-                <div v-if="startPointFiltered.length > 0" class="autocomplete">
-                    <ul>
-                <li v-for="(city, index) in startPointSlider" :key="index" @click="selectStartPoint(city)">
+            <i class="fa fa-map-marker"></i>
+            <input
+              type="text"
+              placeholder="Starting Point"
+              v-model="startPoint"
+              @input="filterStartPoint"
+              class="ride-picker__input"
+            />
+            <div v-if="startPointFiltered.length > 0" class="autocomplete">
+              <ul>
+                <li
+                  v-for="(city, index) in startPointSlider"
+                  :key="index"
+                  @click="selectStartPoint(city)"
+                >
                   {{ city }}
                 </li>
-              </ul> 
+              </ul>
             </div>
           </div>
-          <br>
+          <br />
           <div class="input-box">
-                <i class="fa fa-map-marker"></i>
-                <input type="text" placeholder="Destination" v-model="endPoint" @input="filterEndPoint" class="ride-picker__input">
-                <div v-if="endPointFiltered.length > 0" class="autocomplete">
-                    <ul>
-                <li v-for="(city, index) in endPointSlider" :key="index" @click="selectEndPoint(city)">
+            <i class="fa fa-map-marker"></i>
+            <input
+              type="text"
+              placeholder="Destination"
+              v-model="endPoint"
+              @input="filterEndPoint"
+              class="ride-picker__input"
+            />
+            <div v-if="endPointFiltered.length > 0" class="autocomplete">
+              <ul>
+                <li
+                  v-for="(city, index) in endPointSlider"
+                  :key="index"
+                  @click="selectEndPoint(city)"
+                >
                   {{ city }}
                 </li>
-              </ul> 
+              </ul>
             </div>
           </div>
 
-            <span class="ml-2"> </span>
+          <span class="ml-2"> </span>
 
           <div class="input-box">
             <i class="fa fa-calendar"></i>
-            <input type="date" v-model="selectedDate" class="ride-picker__input">
+            <input
+              type="date"
+              data-date-format="DD MMMM YYYY"
+              v-model="selectedDate"
+              class="ride-picker__input"
+            />
           </div>
 
           <span class="ml-5"> </span>
 
-          <button @click="search" class="b-btn">Search
+          <button @click="search" class="b-btn">
+            Search
             <i class="fa fa-long-arrow-right"></i>
           </button>
-
-
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import axios from 'axios';
-import 'bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
+<script setup>
+import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import "bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
 
+const router = useRouter();
 
-export default {
-  components: {
-    
-  },
-  data() {
-    return {
-      governorates: [
-        "Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille",
-        "A","aaa","aze","azee","Rennes", "Reims", "Le Havre", "Saint-Étienne", "Toulon", "Grenoble", "Angers", "Dijon", "Brest", "Le Mans",
-        "Nîmes", "Aix-en-Provence", "Clermont-Ferrand", "Tours", "Amiens", "Limoges", "Villeurbanne", "Metz", "Besançon",
-        "Perpignan", "Orléans", "Caen", "Mulhouse", "Boulogne-Billancourt", "Rouen", "Nancy", "Argenteuil", "Montreuil",
-        "Saint-Denis", "Roubaix", "Avignon", "Tourcoing", "Poitiers", "Nanterre", "Créteil", "Versailles", "Pau",
-        "Courbevoie", "Vitry-sur-Seine", "Asnières-sur-Seine", "Colombes", "Aulnay-sous-Bois", "La Rochelle", "Rueil-Malmaison",
-        "Antibes", "Saint-Maur-des-Fossés", "Calais", "Champigny-sur-Marne", "Aubervilliers", "Béziers", "Bourges", "Cannes",
-        "Saint-Nazaire", "Dunkerque", "Quimper", "Valence", "Colmar", "Drancy", "Mérignac", "Ajaccio", "Levallois-Perret",
-        "Troyes", "Neuilly-sur-Seine", "Issy-les-Moulineaux", "Villeneuve-d'Ascq", "Noisy-le-Grand", "Antony", "Niort", "Lorient",
-        "Sarcelles", "Chambéry", "Saint-Quentin", "Pessac", "Vénissieux", "Cergy", "La Seyne-sur-Mer", "Clichy", "Beauvais",
-        "Cholet", "Hyères", "Ivry-sur-Seine", "Montauban", "Vannes", "La Roche-sur-Yon", "Charleville-Mézières", "Pantin",
-        "Laval", "Maisons-Alfort", "Bondy", "Évry"
-      ],
-      selectedDate: new Date().toISOString().substr(0, 10),
-      startPoint: '',
-      endPoint: '',
-      startPointFiltered: [],
-      endPointFiltered: [],
-      startPointSliderValue: 5, // Number of items to display in the slider
-      endPointSliderValue: 5 // Number of items to display in the slider
+const governorates = ref([
+  "Paris",
+  "Marseille",
+  "Lyon",
+  "Toulouse",
+  "Nice",
+  "Nantes",
+  "Strasbourg",
+  "Montpellier",
+  "Bordeaux",
+  "Lille",
+  "A",
+  "aaa",
+  "aze",
+  "azee",
+  "Rennes",
+  "Reims",
+  "Le Havre",
+  "Saint-Étienne",
+  "Toulon",
+  "Grenoble",
+  "Angers",
+  "Dijon",
+  "Brest",
+  "Le Mans",
+  "Nîmes",
+  "Aix-en-Provence",
+  "Clermont-Ferrand",
+  "Tours",
+  "Amiens",
+  "Limoges",
+  "Villeurbanne",
+  "Metz",
+  "Besançon",
+  "Perpignan",
+  "Orléans",
+  "Caen",
+  "Mulhouse",
+  "Boulogne-Billancourt",
+  "Rouen",
+  "Nancy",
+  "Argenteuil",
+  "Montreuil",
+  "Saint-Denis",
+  "Roubaix",
+  "Avignon",
+  "Tourcoing",
+  "Poitiers",
+  "Nanterre",
+  "Créteil",
+  "Versailles",
+  "Pau",
+  "Courbevoie",
+  "Vitry-sur-Seine",
+  "Asnières-sur-Seine",
+  "Colombes",
+  "Aulnay-sous-Bois",
+  "La Rochelle",
+  "Rueil-Malmaison",
+  "Antibes",
+  "Saint-Maur-des-Fossés",
+  "Calais",
+  "Champigny-sur-Marne",
+  "Aubervilliers",
+  "Béziers",
+  "Bourges",
+  "Cannes",
+  "Saint-Nazaire",
+  "Dunkerque",
+  "Quimper",
+  "Valence",
+  "Colmar",
+  "Drancy",
+  "Mérignac",
+  "Ajaccio",
+  "Levallois-Perret",
+  "Troyes",
+  "Neuilly-sur-Seine",
+  "Issy-les-Moulineaux",
+  "Villeneuve-d'Ascq",
+  "Noisy-le-Grand",
+  "Antony",
+  "Niort",
+  "Lorient",
+  "Sarcelles",
+  "Chambéry",
+  "Saint-Quentin",
+  "Pessac",
+  "Vénissieux",
+  "Cergy",
+  "La Seyne-sur-Mer",
+  "Clichy",
+  "Beauvais",
+  "Cholet",
+  "Hyères",
+  "Ivry-sur-Seine",
+  "Montauban",
+  "Vannes",
+  "La Roche-sur-Yon",
+  "Charleville-Mézières",
+  "Pantin",
+  "Laval",
+  "Maisons-Alfort",
+  "Bondy",
+  "Évry",
+]);
 
+const selectedDate = ref(new Date().toISOString().substr(0, 10));
+const startPoint = ref("");
+const endPoint = ref("");
+const startPointFiltered = ref([]);
+const endPointFiltered = ref([]);
+const startPointSliderValue = ref(5);
+const endPointSliderValue = ref(5);
 
-    };
-  },
-  computed: {
-    startPointSlider() {
-      return this.startPointFiltered.slice(0, this.startPointSliderValue);
+const startPointSlider = computed(() =>
+  startPointFiltered.value.slice(0, startPointSliderValue.value)
+);
+const endPointSlider = computed(() =>
+  endPointFiltered.value.slice(0, endPointSliderValue.value)
+);
+
+const search = () => {
+  console.log("Start Point:", startPoint.value);
+  console.log("End Point:", endPoint.value);
+  console.log("Selected Date:", selectedDate.value);
+  router.push({
+    name: "rides",
+    query: {
+      startPoint: startPoint.value,
+      endPoint: endPoint.value,
+      date: selectedDate.value,
     },
-    endPointSlider() {
-      return this.endPointFiltered.slice(0, this.endPointSliderValue);
-    }
-
-  },
-  mounted() {
-    $('#datepicker').datepicker({
-      format: 'dd/mm/yyyy', // Adjust format as needed
-      autoclose: true,
-      todayHighlight: true
-    });
-  },
-  methods: {
-    search() {
-      console.log('Start Point:', this.startPoint);
-      console.log('End Point:', this.endPoint);
-      console.log('Selected Date:', this.selectedDate);
-      axios.post('/searchRide', {
-        startPoint: this.startPoint,
-        endPoint: this.endPoint,
-        selectedDate: this.selectedDate
-      })
-        .then(response => {
-          console.log(response);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-
-
-    },
-    filterStartPoint() {
-      this.startPointFiltered = this.governorates.filter(city => city.toLowerCase().startsWith(this.startPoint.toLowerCase()));
-    },
-    filterEndPoint() {
-      this.endPointFiltered = this.governorates.filter(city => city.toLowerCase().startsWith(this.endPoint.toLowerCase()));
-    },
-    selectStartPoint(city) {
-      this.startPoint = city;
-      this.startPointFiltered = [];
-    },
-    selectEndPoint(city) {
-      this.endPoint = city;
-      this.endPointFiltered = [];
-    }
-  }
+  });
 };
 
+const filterStartPoint = () => {
+  startPointFiltered.value = governorates.value.filter((city) =>
+    city.toLowerCase().startsWith(startPoint.value.toLowerCase())
+  );
+};
 
+const filterEndPoint = () => {
+  endPointFiltered.value = governorates.value.filter((city) =>
+    city.toLowerCase().startsWith(endPoint.value.toLowerCase())
+  );
+};
+
+const selectStartPoint = (city) => {
+  startPoint.value = city;
+  startPointFiltered.value = [];
+};
+
+const selectEndPoint = (city) => {
+  endPoint.value = city;
+  endPointFiltered.value = [];
+};
+
+onMounted(() => {});
 </script>
 
 <style scoped>
@@ -186,7 +288,6 @@ export default {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-
 }
 
 .ride-picker__point {
@@ -215,8 +316,8 @@ export default {
 }
 
 :root {
-  --yellow: #EBB14D;
-  --darkblue: #3A3C6C;
+  --yellow: #ebb14d;
+  --darkblue: #3a3c6c;
   --light: #cfd8ef;
   --white: #fff;
 }
@@ -285,7 +386,7 @@ header {
   height: 45px;
   width: 52px;
   margin: -11px;
-  background: #3A3C6C;
+  background: #3a3c6c;
   color: white;
   border: none;
   margin-right: -20px;
@@ -293,8 +394,8 @@ header {
 }
 
 .s-btn:hover {
-  background: #EBB14D;
-  color: #3A3C6C;
+  background: #ebb14d;
+  color: #3a3c6c;
 }
 
 .topnav li {
@@ -305,12 +406,12 @@ header {
 
 .topnav li a {
   text-decoration: none;
-  color: #3A3C6C;
+  color: #3a3c6c;
 }
 
 .btn-r {
   padding: 11px 25px;
-  background: #3A3C6C;
+  background: #3a3c6c;
   color: white;
   border: none;
   margin-top: -16px;
@@ -319,8 +420,8 @@ header {
 }
 
 .btn-r:hover {
-  background: #EBB14D;
-  color: #3A3C6C;
+  background: #ebb14d;
+  color: #3a3c6c;
 }
 
 .topnav {
@@ -328,11 +429,11 @@ header {
 }
 
 .topnav li a:hover {
-  color: #EBB14D;
+  color: #ebb14d;
 }
 
 .header-bottom {
-  background: #3A3C6C;
+  background: #3a3c6c;
 }
 
 .bottomnav li {
@@ -348,16 +449,16 @@ header {
 }
 
 .active {
-  background: #EBB14D;
+  background: #ebb14d;
 }
 
 .active a {
-  color: #3A3C6C !important;
+  color: #3a3c6c !important;
 }
 
 .b-btn {
   padding: 13px 25px;
-  background: #EBB14D;
+  background: #ebb14d;
   color: white;
   border: none;
   font-size: 16px;
@@ -378,7 +479,7 @@ header {
 
 .heading {
   font-size: 50px;
-  color: #3A3C6C;
+  color: #3a3c6c;
 }
 
 .sec-2 {
@@ -387,7 +488,7 @@ header {
 }
 
 .heading-2 {
-  color: #3A3C6C;
+  color: #3a3c6c;
   text-align: center;
 }
 
@@ -407,7 +508,7 @@ header {
 
 .box h3 {
   font-size: 15px;
-  color: #3A3C6C;
+  color: #3a3c6c;
   margin: 15px 0px;
   font-weight: 500;
 }
@@ -429,7 +530,7 @@ header {
 }
 
 .heading-3 {
-  color: #3A3C6C;
+  color: #3a3c6c;
 }
 
 .p3 {
@@ -447,7 +548,7 @@ header {
 }
 
 .p5:after {
-  content: '';
+  content: "";
   position: absolute;
   top: 75%;
   right: 5%;
@@ -463,7 +564,7 @@ header {
 }
 
 .sec-5 {
-  background: #3A3C6C;
+  background: #3a3c6c;
   padding: 100px 0px;
   position: relative;
   height: 150px;
@@ -471,7 +572,7 @@ header {
 }
 
 .footer-distributed {
-  background-color: #3A3C6C;
+  background-color: #3a3c6c;
   box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
   width: 100%;
@@ -492,7 +593,7 @@ header {
   color: #ffffff;
   margin: 0 0 10px;
   padding: 0;
-  transition: ease .25s;
+  transition: ease 0.25s;
 }
 
 .footer-distributed p.footer-links a {
@@ -500,7 +601,7 @@ header {
   line-height: 1.8;
   text-decoration: none;
   color: inherit;
-  transition: ease .25s;
+  transition: ease 0.25s;
 }
 
 .footer-distributed .footer-links a:before {
@@ -526,14 +627,14 @@ header {
   display: inline-block;
   width: 35px;
   height: 35px;
-  background-color: #EBB14D;
+  background-color: #ebb14d;
   border-radius: 2px;
   font-size: 20px;
-  color: #3A3C6C;
+  color: #3a3c6c;
   text-align: center;
   line-height: 35px;
   margin-left: 3px;
-  transition: all .25s;
+  transition: all 0.25s;
 }
 
 .footer-distributed .footer-right a:hover {
