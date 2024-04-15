@@ -96,7 +96,6 @@ header{padding: 10px 0px 0px 0px;}
 	right: 5%;
 	width: 50px;
 	height: 50px;
-	background: url(../../assets/img/landing_image.png);
 	background-size: 50px;
 	transform: rotateZ(184deg);
 }

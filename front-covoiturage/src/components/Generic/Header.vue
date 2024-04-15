@@ -16,14 +16,14 @@
 
             <div class="col6">
     <ul class="topnav">
-        <li><a href="#">Ride</a></li>
-        <li><a href="#">Drive</a></li>
-        <li><a href="#">Help</a></li>
+       
 
         <li v-if="!isLogged">
-            <a href="#">Sign in</a>
+            <router-link to="/login">
+                <button class="btn-r">Sign In</button>
+            </router-link>
             <span class="ml-4"></span>
-            <router-link to="/register">
+            <router-link to="/rides">
                 <button class="btn-r">Ride With Us</button>
             </router-link>
         </li>
@@ -34,8 +34,8 @@
             </a>
             <span class="ml-4">{{ nom }} {{ prenom }}</span>
             <span class="ml-4"></span>
-            <router-link to="/logout">
-                <button class="btn-r">Logout</button>
+            <router-link to="/logout" >
+                <button class="btn-r" @click="logout" v-if="isLogged">Logout</button>
             </router-link>
         </li>
     </ul>
@@ -308,7 +308,6 @@ header {
     right: 5%;
     width: 50px;
     height: 50px;
-    background: url(../../assets/img/landing_image.png);
     background-size: 50px;
     transform: rotateZ(184deg);
 }
@@ -406,6 +405,7 @@ import { ref } from 'vue';
 
 
 
+
 //change active class on click
 document.addEventListener('DOMContentLoaded', function () {
     const links = document.querySelectorAll('.bottomnav li');
@@ -420,7 +420,20 @@ document.addEventListener('DOMContentLoaded', function () {
 const nom = localStorage.getItem('nom');
 const prenom = localStorage.getItem('prenom');
 
-const isLogged = ref(localStorage.isLoggedin);
+const isLogged = ref(localStorage.getItem('isLoggedin'));
+
+const logout = () => {
+    isLogged.value = false;
+    localStorage.removeItem('nom');
+    localStorage.removeItem('prenom');
+    localStorage.removeItem('isLoggedin');
+
+    window.location.href = '/';
+    console.log('logout');
+    console.log(isLogged.value);
+    
+};
+
 
 
 

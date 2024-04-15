@@ -76,14 +76,23 @@
 			<div class="content">
 				<h2 class="heading-3">Download the Carpool mobile application</h2>
 				<br>
+				<span class="mb-5"></span>
+
 				<p class="p3">Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is
 					simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the
 					printing and typesetting industry.
 					Lorem Ipsum is simply dummy text of the printing and typesetting industry.Lorem Ipsum is simply
 					dummy text of the printing and typesetting industry.
 				</p>
+
 				<br>
-				<button class="btn-r">Download Now</button>
+				
+				<!-- div align right with padding top --> 
+				<div style="padding-top: 10px;">
+					<button class="btn-r">Download our app</button>
+				</div>
+				
+
 			</div>
 			<div class="clearfix"></div>
 
@@ -106,6 +115,9 @@
 					dummy text of the printing and typesetting industry.Lorem Ipsum is simply dummy text of the printing
 					and typesetting industry.Lorem Ipsum is simply dummy text of the printing and typesetting industry.
 				</p>
+				<!-- author name on the right side -->
+				<p class="p5" style="float: right;"> - Mounir  </p>
+
 			</div>
 		</div>
 	</section>

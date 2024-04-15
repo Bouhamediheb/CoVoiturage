@@ -16,16 +16,7 @@
           <fieldset class="rounded p-4 custom-border">
             <legend class="legend-label" >Personal Information</legend>
             <form @submit.prevent="submitForm">
-              <div class="mb-3">
-                <label for="firstName" class="form-label">First Name:</label>
-                <input type="text" id="firstName" v-model="firstName" class="form-control" required >
-              </div>
-  
-              <div class="mb-3">
-                <label for="lastName" class="form-label">Last Name:</label>
-                <input type="text" id="lastName" v-model="lastName" class="form-control" required>
-              </div>
-  
+          
               <div class="mb-3">
                 <label for="profilePicture" class="form-label">Profile Picture:</label>
                 <input type="file" id="profilePicture" @change="handleFileUpload" accept="image/*" class="form-control">
@@ -149,8 +140,7 @@
     
     data() {
       return {
-        firstName: '',
-        lastName: '',
+     
         profilePicture: null,
         age: '',
         phoneNumber: '',

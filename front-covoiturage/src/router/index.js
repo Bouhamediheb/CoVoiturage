@@ -8,6 +8,15 @@ import Contact from "../components/Generic/Contact.vue";
 import Terms from "../components/Generic/TermsOfUse.vue";
 import About from "../components/Generic/About.vue"
 
+const isAuthenticated = () => {
+  if (localStorage.getItem("token")) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+
 const routes = [ 
   {
     path: "/",
@@ -19,29 +28,60 @@ const routes = [
   {
     path: "/register",
     name: "register",
-    component: function () {
-      return import("../components//Register/RegisterView.vue");
+    component: Signup,
+    //block if user is authenticated
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next({ name: "Landing" });
+      } else {
+        next();
+      }
     },
   },
   {
     path: "/rides",
     name: "rides",
     component: ListRides,
+
+
   },
   {
     path: "/addpref",
     name: "addpref",
     component: AddPref,
+        beforeEnter: (to, from, next) => {
+          if (isAuthenticated()) {
+            next();
+          } else {
+            next({ name: "login" });
+          }
+        },
+
+
   },
   {
     path: "/login",
     name: "login",
     component: Login,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next({ name: "Landing" });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: "/signup",
     name: "signup",
     component: Signup,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next({ name: "Landing" });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: "/contact",
