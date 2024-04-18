@@ -2,7 +2,7 @@
   <div class="container-fluid">
     <div class="d-flex justify-content-center spaced">
       <div class="row mt-2 px-3">
-        <template v-for="ride in rides" :key="ride.id">
+        <div v-for="ride in rides" :key="ride.id">
           <div v-if="ride.nbPlaces > 0" class="col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card">
               <img
@@ -11,9 +11,7 @@
                 width="100%"
                 alt="Card image"
               />
-              <div class="card-body pt-0 px-2">
-                <div class="card">
-                  <div class="card-body pt-0 px-2">
+              <div class="card-body pt-0 px-1 ">
                     <div
                       class="d-flex flex-row justify-content-between mb-0 pl-3 pr-3 mt-1"
                     >
@@ -23,7 +21,7 @@
                       </div>
                     </div>
                     <div
-                      class="d-flex flex-row justify-content-between pl-3 pr-3 mid"
+                      class="d-flex flex-row justify-content-between pl-3 pr-3 "
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Téléphone</small>
@@ -43,7 +41,7 @@
                       </div>
                     </div>
                     <div
-                      class="d-flex flex-row justify-content-between pl-3 pr-3 mid"
+                      class="d-flex flex-row justify-content-between pl-3 pr-3 "
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Date</small>
@@ -51,7 +49,7 @@
                       </div>
                     </div>
                     <div
-                      class="d-flex flex-row justify-content-between pl-3 pr-3 mid"
+                      class="d-flex flex-row justify-content-between pl-3 pr-3 "
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Départ</small>
@@ -63,7 +61,7 @@
                       </div>
                     </div>
                     <div
-                      class="d-flex flex-row justify-content-between pl-3 pr-3 mid"
+                      class="d-flex flex-row justify-content-between pl-3 pr-3 "
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Nombre de places</small>
@@ -74,14 +72,14 @@
                     <div
                       class="d-flex flex-col justify-content-between pl-3 pr-3 pb-1"
                     >
-                      <div class="d-flex flex-column mid">
+                      <div class="d-flex flex-column ">
                         <span v-if="climatisation[ride.id - 1] === 1"
-                          >Climatisation</span
+                          > <i class="fas fa-wind"></i> Climatisation</span
                         >
-                        <span v-if="animaux[ride.id - 1] === 1">Animaux</span>
-                        <span v-if="fumeur[ride.id - 1] === 1">Fumeur</span>
-                        <span v-if="baggage[ride.id - 1] === 1">Baggage</span>
-                        <span v-if="bebe[ride.id - 1] === 1">Bébé</span>
+                        <span v-if="animaux[ride.id - 1] === 1"> <i class="fas fa-dog"></i> Animaux</span>
+                        <span v-if="fumeur[ride.id - 1] === 1"> <i class="fas fa-smoking"></i>Fumeur</span>
+                        <span v-if="baggage[ride.id - 1] === 1"> <i class="fas fa-suitcase"></i> Baggage</span>
+                        <span v-if="bebe[ride.id - 1] === 1"> <i class="fas fa-baby"></i> Bébé</span>
                       </div>
                     </div>
                     <div
@@ -94,13 +92,13 @@
                     </div>
                   </div>
                   <div class="card-footer d-flex justify-content-center">
-                    <button class="btn reserve">Réserver votre place!</button>
+                    <button @click="reserver(ride.id)" class="btn reserve">
+                      Réserver votre place!
+                    </button>
                   </div>
                 </div>
               </div>
-            </div>
           </div>
-        </template>
       </div>
     </div>
   </div>
@@ -133,9 +131,7 @@ const ridesLoaded = ref(false);
 
 onMounted(async () => {
   try {
-   
-    
-if (Object.keys(route.query).length === 0) {
+    if (Object.keys(route.query).length === 0) {
       const response = await axios.get("http://localhost:8000/api/trajets");
       rides.value = response.data;
     } else {
@@ -151,7 +147,6 @@ if (Object.keys(route.query).length === 0) {
       );
       rides.value = response.data;
     }
-    
 
     for (const ride of rides.value) {
       const voiture = await fetchRideInfoVoitures(ride);
@@ -203,6 +198,15 @@ const fetchRideInfoVoitures = async (ride) => {
 const fetchRideInfoUsers = async (ride) => {
   const user = await getUsers(ride.idConducteur);
   return { ...rides, ...user };
+};
+
+const reserver = (id) => {
+  axios.put(`http://localhost:8000/api/updatePlacesTrajet/${id}`);
+  const userId = localStorage.getItem("user_id");
+  axios.post(`http://localhost:8000/api/reserver`, {
+    idTrajet: id,
+    idPassager: userId,
+  });
 };
 </script>
 

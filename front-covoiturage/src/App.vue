@@ -20,6 +20,7 @@ import Landing from './components/HomePage/Landing.vue'
 import Header from './components/Generic/Header.vue'
 import Signup from './components/HomePage/Signup.vue'
 import SearchRide from './components/HomePage/SearchRide.vue'
+import RideHistory from './components/History/RideHistory.vue'
 
 export default {
   components: {
@@ -27,7 +28,8 @@ export default {
     Landing,
     Header,
     Signup,
-    SearchRide
+    SearchRide,
+    RideHistory
   },
   computed: {
     showSignup() {

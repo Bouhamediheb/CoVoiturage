@@ -8,6 +8,7 @@ import Contact from "../components/Generic/Contact.vue";
 import Terms from "../components/Generic/TermsOfUse.vue";
 import About from "../components/Generic/About.vue"
 import PublishRide  from "../components/Rides/PublishRide.vue";
+import RideHistory from "../components/History/RideHistory.vue";
 
 const isAuthenticated = () => {
   if (localStorage.getItem("token")) {
@@ -101,6 +102,18 @@ const routes = [
     path: "/publish",
     name: "publish",
     component: PublishRide,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next();
+      } else {
+        next({ name: "login" });
+      }
+    },
+  },
+  {
+    path: "/history",
+    name: "history",
+    component: RideHistory,
     beforeEnter: (to, from, next) => {
       if (isAuthenticated()) {
         next();

@@ -33,10 +33,33 @@ class TrajetController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Trajet $trajet)
+    public function show($id)
     {
         // Show the details of a specific trajet
+        $trajet = Trajet::find($id);
         return response()->json($trajet, 200);
+    }
+
+    public function showByDriver($id)
+    {
+        // Get trajet by idConducteur
+        $trajet = Trajet::where('idConducteur',$id)->get();
+        return response()->json($trajet, 200);
+    }
+
+    public function annulerReservation($id)
+    {
+        $trajet = Trajet::find($id);
+        if ($trajet->etat == 0) {
+            $trajet->etat = 1;
+            $trajet->nbPlaces = $trajet->nbPlaces + 1;
+            $trajet->update();
+            return response()->json($trajet, 200);
+        } else {
+            $trajet->nbPlaces = $trajet->nbPlaces + 1;
+            $trajet->update();
+            return response()->json($trajet, 200);
+        }
     }
 
     /**

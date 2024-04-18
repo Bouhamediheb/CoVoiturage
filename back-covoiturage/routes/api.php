@@ -36,9 +36,11 @@ Route::post('/trajets', [TrajetController::class, 'store']);
 Route::put('/trajets/{id}', [TrajetController::class, 'update']);
 Route::delete('/trajets/{id}', [TrajetController::class, 'destroy']);
 Route::get('/rechercheTrajet', [TrajetController::class, 'rechercheTrajet']);
-Route::post('/updateEtatTrajet', [TrajetController::class, 'updateEtatTrajet']);
+Route::put('/updateEtatTrajet/{id}', [TrajetController::class, 'updateEtatTrajet']);
 Route::get('/displayTripsByStatus', [TrajetController::class, 'displayTripsByStatus']);
-Route::post('/updatePlacesTrajet', [TrajetController::class, 'updatePlacesTrajet']);
+Route::put('/updatePlacesTrajet/{id}', [TrajetController::class, 'updatePlacesTrajet']);
+Route::get('/trajetsbydriver/{id}', [TrajetController::class, 'showByDriver']);
+Route::put('/annulerReservation/{id}', [TrajetController::class, 'annulerReservation']);
 
 //Route for Voiture
 Route::get('/voitures', [VoitureController::class, 'index']);
@@ -55,3 +57,5 @@ Route::middleware('auth:sanctum')->post('/logout', [LoginController::class, 'log
 
 //Route for ListePassager
 Route::post('/reserver', [ListePassagerController::class, 'reserver']);
+Route::get('/listePassager', [ListePassagerController::class, 'index']);
+Route::get('/listePassager/{id}', [ListePassagerController::class, 'listePassagerById']);
