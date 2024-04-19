@@ -34,11 +34,13 @@
                   </div>
                   <div class="form-group">
   <label for="car">Choose a Car:</label>
-  <select id="car" v-model="selectedCar" class="form-control">
-    <option v-for="(car, index) in cars" :key="index" :value="car.id">{{ car.modele }} {{ car.matricule }}  </option>
+  <select id="car" v-model="selectedCar" class="form-control" :disabled="cars.length === 0">
+    <option :value="null">{{ placeholderText }}</option>
+    <template v-if="cars.length > 0">
+      <option v-for="(car, index) in cars" :key="index" :value="car.id">{{ car.marque }} {{ car.modele }} {{ car.matricule }}</option>
+    </template>
   </select>
-</div>                 
-
+</div>
                   <div class="form-group">
                     <label for="passengers">Number of Passengers:</label>
                     <input type="number" id="passengers" v-model.number="numPassengers" min="1" max="4" placeholder="Enter available seats" class="form-control">
@@ -50,7 +52,7 @@
 
                   <div class="form-group">
                     <label for="departureDate"> Fee :</label>
-                    <input type="number" id="fee" v-model="fee" class="form-control">
+                    <input type="number" id="fee" v-model="fee" class="form-control" placeholder="Enter the fee" >
                   </div>
 
                   <div class="form-group">
@@ -58,7 +60,9 @@
                     <textarea id="description" v-model="description" class="form-control"></textarea>
                   </div>
                   
-                  <button type="submit" class="btn save-change" style="height: 40px;">Publish Ride</button>
+                  <button type="submit" class="btn save-change" style="height: 40px;" :disabled="isFormIncomplete">Publish Ride</button>
+                  <OpValidNotif v-if="showNotification" :message="notificationMessage" />
+
                 </form>
               </div>
             </div>
@@ -73,6 +77,7 @@
 <script>
 import axios from 'axios';
 import { ref } from 'vue';
+import OpValidNotif from '../Generic/OpValidNotif.vue';
 
 
 
@@ -108,6 +113,7 @@ export default {
       description: "",
       idConducteur: null,
       idVoiture: null,
+      showNotification: false,
     };
   },
   mounted() {
@@ -195,7 +201,12 @@ export default {
       axios.post('http://localhost:8000/api/trajets', ride)
       .then(response => {
         console.log(response.data);
-        this.$router.push({ name: 'Rides' });
+        this.notificationMessage = 'Ride added successfully !';
+
+        this.showNotification = true;
+        setTimeout(() => {
+          this.$router.push('/');
+        }, 5000);
       })
       .catch(error => {
         console.log(error);
@@ -203,7 +214,18 @@ export default {
     }
   
 
-  }
+  },
+  computed: {
+    placeholderText() {
+      return this.cars.length === 0 ? 'No cars available' : 'Select a car';
+    },
+    isFormIncomplete() {
+      return !(this.origin && this.destination && this.selectedCar && this.numPassengers && this.departureDate);
+    }
+  },
+  components: {
+    OpValidNotif,
+  },
 }
 </script>
 

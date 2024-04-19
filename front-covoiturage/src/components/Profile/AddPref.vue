@@ -19,11 +19,7 @@
           <fieldset class="rounded p-4 custom-border">
             <legend class="legend-label">Car Information</legend>
             <form>
-              <div class="mb-3">
-                <label for="carName" class="form-label">Car Photo:</label>
-                <input type="file" id="carPhoto" class="form-control" required>
-
-              </div>
+             
 
               <div class="mb-3">
                 <label for="carName" class="form-label">Car Name:</label>
@@ -117,25 +113,34 @@
       <div class="row justify-content-center mt-4 mb-4">
         <div class="col-md-10 text-center">
             <button class="btn save-change" @click="submitForm()" >Save</button>
+            <OpValidNotif v-if="showNotification" :message="notificationMessage" />
+
+
+
         </div>
       </div>
     </div>
   </template>
   
-  <script >
+  <script>
 import axios from 'axios';
+import OpValidNotif from '../Generic/OpValidNotif.vue';
 
 
   export default {
     setup() {
       
     },
+    components: {
+      OpValidNotif
+    },
   
     
     data() {
       return {
      
-     
+        showNotification: false, // Add a boolean property to control the visibility of the notification
+
         carInfo: {
           name: '',
           manufacturer: '',
@@ -233,6 +238,14 @@ import axios from 'axios';
         })
           .then(response => {
             console.log(response);
+            //redirect to home
+            this.notificationMessage = 'Car and preferences added successfully !';
+
+            this.showNotification = true;
+            //wait 5 seconds
+            setTimeout(() => {
+              this.$router.push({ name: 'Landing' });
+            }, 5000);
           })
           .catch(error => {
             console.log(error);

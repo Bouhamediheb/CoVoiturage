@@ -1,16 +1,14 @@
 <template>
-  <div class="container-fluid">
-    <div class="d-flex justify-content-center spaced">
-      <div class="row mt-2 px-3">
+  <div class="container-fluid" >
+    <div class="d-flex justify-content-center spaced"> <!--  " class="col-sm-6 col-md-4 col-lg-3 mb-3"> Center the cards -->
+      <div class="row mt-2 ">
+        
         <div v-for="ride in rides" :key="ride.id">
-          <div v-if="ride.nbPlaces > 0" class="col-sm-6 col-md-4 col-lg-3 mb-3">
+          <!-- show rides that user didn't reserve from localStorage-->
+          <div v-if="shouldDisplayRide(ride)" class="col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card">
-              <img
-                src="https://sf1.autoplus.fr/wp-content/uploads/autoplus/2021/12/27715_1630853_k2_k1_3760701-750x410.jpg"
-                class="card-img-top"
-                width="100%"
-                alt="Card image"
-              />
+              <img :src="carImages[ride.id - 1]" class="card-img-top" alt="Car image" />
+
               <div class="card-body pt-0 px-1 ">
                     <div
                       class="d-flex flex-row justify-content-between mb-0 pl-3 pr-3 mt-1"
@@ -87,7 +85,7 @@
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Montant</small>
-                        <h6>{{ ride.montant }} EUR</h6>
+                        <h6>{{ ride.montant }} TND</h6>
                       </div>
                     </div>
                   </div>
@@ -95,6 +93,8 @@
                     <button @click="reserver(ride.id)" class="btn reserve">
                       Réserver votre place!
                     </button>
+                    <OpValidNotif v-if="showNotification" :message="notificationMessage" />
+
                   </div>
                 </div>
               </div>
@@ -108,6 +108,15 @@
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
+const accessKey = 'q-vVbg13r4TvpkLVJiV6YvDvo9RF2dZ5gAjRWIFbZYk';
+const carImages = ref([]);
+import OpValidNotif from '../Generic/OpValidNotif.vue';
+
+const showNotification = ref(false);
+const notificationMessage = ref('');
+
+
+
 
 import axios from "axios";
 const pointDepart = route.query.startPoint;
@@ -153,6 +162,7 @@ onMounted(async () => {
       const allow = voiture.matricule;
       const modele1 = voiture.modele;
       const marque1 = voiture.marque;
+      console.log(marque1);
       const climatisation1 = voiture.climatisation;
       const animaux1 = voiture.animaux;
       const fumeur1 = voiture.fumeur;
@@ -179,6 +189,16 @@ onMounted(async () => {
   } catch (error) {
     console.error(error);
   }
+
+  // Fetch car images for each ride
+  for (const ride of rides.value) {
+    // Use the car model or name as the query parameter
+    const modelName = `${marque.value[ride.id - 1]} ${modele.value[ride.id - 1]}`;
+    const images = await fetchCarImages(modelName);
+    // Push the fetched image URL to the carImages array
+    carImages.value.push(images.length > 0 ? images[0] : ''); // Use the first image in the array, or an empty string if no images are found
+  }
+
 });
 
 const getVoitures = async (id) => {
@@ -207,7 +227,46 @@ const reserver = (id) => {
     idTrajet: id,
     idPassager: userId,
   });
+  showNotification.value = true;
+  notificationMessage.value = "You've taken a seat!";
+  // push the trajet id in local storage array 
+  const trajet_id = localStorage.getItem('trajet_id');
+  if (trajet_id) {
+    const trajet_id_array = trajet_id.split(',');
+    if (!trajet_id_array.includes(id.toString())) {
+      trajet_id_array.push(id);
+      localStorage.setItem('trajet_id', trajet_id_array.join(','));
+    }
+  } else {
+    localStorage.setItem('trajet_id', id);
+  }
 };
+
+// Fetch car images from Unsplash API
+const fetchCarImages = async (modelName) => {
+  try {
+    const response = await fetch(`https://api.unsplash.com/search/photos?query=${modelName}&client_id=${accessKey}`);
+    const data = await response.json();
+    return data.results.map(result => result.urls.regular);
+  } catch (error) {
+    console.error('Error fetching car images:', error);
+    return [];
+  }
+};
+
+const shouldDisplayRide = (ride) => {
+  const trajet_id = localStorage.getItem('trajet_id');
+  if (!trajet_id) {
+    return true; // If localStorage doesn't have any reserved rides, display all rides
+  } else {
+    const trajet_id_array = trajet_id.split(',');
+    return ride.nbPlaces > 0 && !trajet_id_array.includes(ride.id.toString());
+  }
+};
+
+// Array to store fetched car images
+
+
 </script>
 
 <style scoped>
@@ -221,6 +280,7 @@ body {
 .row {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .col-sm-6 {
@@ -239,14 +299,20 @@ body {
 }
 
 .card {
-  width: 250px;
+  width: 350px; /* Fixed width for the card */
+  height: 400px; /* Fixed height for the card */
   border-radius: 10px;
   margin-bottom: 20px;
+  display: flex; /* Use flexbox to ensure consistent sizing */
+  flex-direction: column; /* Stack card content vertically */
 }
 
 .card-img-top {
-  border-top-right-radius: 10px;
+  width: 100%;
+  height: 200px; /* Adjust the height as needed */
+  object-fit: cover; /* Ensure the image covers the entire space */
   border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 span.text-muted {
@@ -310,9 +376,19 @@ small.justify-content-center {
   margin: 5px;
 }
 
+.card-body {
+  height: calc(100% - 50px); /* Set height for card body, subtract height of footer */
+  padding: 10px;
+  overflow-y: auto; /* Make card body scrollable vertically */
+}
+
 @media screen and (max-width: 600px) {
   .col-sm-4 {
     margin-bottom: 50px;
   }
+}
+
+.card-footer {
+  padding: 10px;
 }
 </style>

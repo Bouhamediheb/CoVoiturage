@@ -21,6 +21,8 @@ import Header from './components/Generic/Header.vue'
 import Signup from './components/HomePage/Signup.vue'
 import SearchRide from './components/HomePage/SearchRide.vue'
 import RideHistory from './components/History/RideHistory.vue'
+import NotFound from './components/error/NotFound.vue'
+import OpValidNotif from './components/Generic/OpValidNotif.vue';
 
 export default {
   components: {
@@ -29,7 +31,10 @@ export default {
     Header,
     Signup,
     SearchRide,
-    RideHistory
+    RideHistory,
+    NotFound,
+    OpValidNotif
+
   },
   computed: {
     showSignup() {

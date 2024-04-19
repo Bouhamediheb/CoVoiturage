@@ -21,8 +21,9 @@
                         <router-link to="/login">
                             <button class="btn-r">Sign In</button>
                         </router-link>
+                        
                         <span class="ml-4"></span>
-                        <router-link to="/rides">
+                        <router-link to="/register">
                             <button class="btn-r">Ride With Us</button>
                         </router-link>
                     </li>
@@ -31,11 +32,11 @@
                         <div class="dropdown">
                             <a class="dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                                <span class="ml-4">Bienvenue , {{ nom }} {{ prenom }}</span>
+                                <span class="ml-4">Hello , {{ nom }} {{ prenom }}</span>
                             </a>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <router-link to="/profile" class="dropdown-item">Add preferences</router-link>
-                                <router-link to="/settings" class="dropdown-item">Settings</router-link>
+                                <router-link to="/addpref" class="dropdown-item">Add preferences</router-link>
+                                <router-link to="/history" class="dropdown-item">History</router-link>
                                 <router-link to="/logout" class="dropdown-item" @click="logout">Logout</router-link>
                             </div>
                         </div>
@@ -63,7 +64,9 @@
                         <li><a href="#"><i class="fa fa-exclamation-circle"></i> About</a></li>
                     </router-link>
                 </ul>
+                <router-link to="/publish">
                 <button class="b-btn">Become a Driver</button>
+            </router-link>
                 <div class="clearfix"></div>
             </div>
         </div>

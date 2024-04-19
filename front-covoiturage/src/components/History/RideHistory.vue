@@ -12,8 +12,44 @@
   <div class="container mt-5">
         <div class="row justify-content-center mt-4">
         <div class="col-md-10">
+          <fieldset class="rounded p-4 custom-border mt-5 mb-2">
+            <legend class="legend-label">Your active rides : </legend>
+            <!-- table -->
+            <table class="table table-striped" >
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Departure</th>
+                  <th scope="col">Arrival</th>
+                  <th scope="col">Number of places</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Action</th>
+                </tr>
+                </thead>
+                <tbody v-if = "ridesAsDriver.length > 0">
+                    <tr v-for="ride in ridesAsDriver" :key="ride.id" >
+                    <td v-if="ride.etat==-1">{{ ride.dateDepart }}</td>
+                    <td v-if="ride.etat==-1">{{ ride.pointDepart }}</td>
+                    <td v-if="ride.etat==-1">{{ ride.pointArrive }}</td>
+                    <td v-if="ride.etat==-1">{{ ride.nbPlaces }}</td>
+                    <td v-if="ride.etat==-1">{{ ride.montant }} DT</td>
+                    <td v-if="ride.etat==-1"> 
+                        <button @click="cancelRide(ride.id)" class="btn btn-danger" > Delete Ride</button>
+                    </td>
+                  
+                    </tr>
+                </tbody>
+                <tbody v-else>
+                    <tr>
+                        <td colspan="6" class="text-center">No rides found</td>
+                    </tr>
+                </tbody>
+            </table>
+            </fieldset>
+
+
   <fieldset class="rounded p-4 custom-border mt-5 mb-2">
-            <legend class="legend-label">Your pending rides : </legend>
+            <legend class="legend-label">Your active seats : </legend>
             <!-- table -->
             <table class="table table-striped" >
               <thead>
@@ -69,11 +105,11 @@
               </thead>
                 <tbody v-if = "ridesAsDriver.length > 0">
                     <tr v-for="ride in ridesAsDriver" :key="ride.id">
-                    <td>{{ ride.dateDepart }}</td>
-                    <td>{{ ride.pointDepart }}</td>
-                    <td>{{ ride.pointArrive }}</td>
-                    <td>{{ ride.nbPlaces }}</td>
-                    <td>{{ ride.montant }} DT</td>
+                    <td v-if="ride.etat==1">{{ ride.dateDepart }}</td>
+                    <td v-if="ride.etat==1">{{ ride.pointDepart }}</td>
+                    <td v-if="ride.etat==1">{{ ride.pointArrive }}</td>
+                    <td v-if="ride.etat==1">{{ ride.nbPlaces }}</td>
+                    <td v-if="ride.etat==1">{{ ride.montant }} DT</td>
                   
                     </tr>
                 </tbody>
@@ -100,14 +136,14 @@
 
                 </tr>
                 </thead>
-                <tbody v-if = "ridesAsPassenger.length > 0">
+                <tbody v-if = "ridesAsPassenger.length > 0 ">
                     <tr v-for="ride in ridesAsPassenger" :key="ride.id">
-                    <td>{{ ride.dateDepart }}</td>
-                    <td>{{ ride.pointDepart }}</td>
-                    <td>{{ ride.pointArrive }}</td>
-                    <td>{{ ride.nbPlaces }}</td>
-                    <td>{{ ride.montant }} DT</td>
-                    <td> 
+                    <td v-if="ride.etat==1 ">{{ ride.dateDepart }}</td>
+                    <td v-if="ride.etat==1 ">{{ ride.pointDepart }}</td>
+                    <td v-if="ride.etat==1 ">{{ ride.pointArrive }}</td>
+                    <td v-if="ride.etat==1 ">{{ ride.nbPlaces }}</td>
+                    <td v-if="ride.etat==1 ">{{ ride.montant }} DT</td>
+                    <td v-if="ride.etat==1 "> 
                         <button @click="reviewDriver(ride.id)" class="btn btn-primary" > Review </button>
                   </td>
                     </tr>
@@ -119,7 +155,8 @@
                 </tbody>
             </table>
             </fieldset>
-            
+            <OpValidNotif v-if="showNotification" :message="notificationMessage" />
+
 
           
 
@@ -137,6 +174,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { onMounted } from 'vue';
+import OpValidNotif from '../Generic/OpValidNotif.vue';
 
 const rides =ref([]);
 const ridesAsDriver = ref([]);
@@ -144,6 +182,9 @@ const ridesAsPassenger = ref([]);
 const ridesIds = ref([]);
 
 const userId = localStorage.getItem('user_id');
+
+const showNotification = ref(false);
+const notificationMessage = ref('');
 
 
 const getRidesAsPassg = () => {
@@ -190,9 +231,40 @@ onMounted(() => {
 
 });
 
-const cancelReservation = (id) =>
+const cancelReservation = async (id, userId) => {
+  try {
+    const response = await axios.put(`http://localhost:8000/api/trajets/${id}`, {
+      data: { userId } // Send the user ID in the request body
+    });
+
+    // Check if the cancellation was successful
+    if (response.status === 200) {
+      showNotification.value = true;
+      notificationMessage.value = "Reservation canceled successfully";
+      
+    } else {
+      // Handle other status codes if needed
+      console.error("Failed to cancel reservation:", response.statusText);
+    }
+  } catch (error) {
+    console.error("Error canceling reservation:", error);
+  }
+};
+
+
+const cancelRide = (id) =>
 {
-    axios.delete(`http://localhost:8000/api/trajets/${id}`);
+    axios.delete(`http://localhost:8000/api/deltrajet/${id}`).then(response => {
+        showNotification.value = true;
+        notificationMessage.value = "Ride deleted successfully";
+        setTimeout(() => {
+            //reload page
+            location.reload();
+        }, 3000);
+    }).catch(error => {
+        console.error('Error deleting ride:', error);
+    });
+
 }
 
 const reviewDriver = (id) =>

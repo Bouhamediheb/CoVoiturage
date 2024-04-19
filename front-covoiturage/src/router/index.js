@@ -9,6 +9,7 @@ import Terms from "../components/Generic/TermsOfUse.vue";
 import About from "../components/Generic/About.vue"
 import PublishRide  from "../components/Rides/PublishRide.vue";
 import RideHistory from "../components/History/RideHistory.vue";
+import NotFound from "../components/error/NotFound.vue";
 
 const isAuthenticated = () => {
   if (localStorage.getItem("token")) {
@@ -65,6 +66,13 @@ const routes = [
     path: "/login",
     name: "login",
     component: Login,
+    beforeEnter: (to, from, next) => {
+      if (isAuthenticated()) {
+        next({ name: "Landing" });
+      } else {
+        next();
+      }
+    },
     
   },
   {
@@ -94,10 +102,7 @@ const routes = [
     name: "about",
     component: About,
   },
-  {
-    path: "/:pathMatch(.*)*",
-    redirect: "/",
-  },
+
   {
     path: "/publish",
     name: "publish",
@@ -121,6 +126,11 @@ const routes = [
         next({ name: "login" });
       }
     },
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: NotFound,
   },
 
   

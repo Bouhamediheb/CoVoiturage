@@ -65,6 +65,7 @@ const login = () => {
       setTimeout(() => {
         router.push({ name: "Landing" });
       }, 1000);
+      location.reload();
     })
     .catch((error) => {
       console.log(error);

@@ -92,7 +92,7 @@ const user = {
 const register = () => {
   axios.post("http://localhost:8000/api/register", user).then((response) => {
     setTimeout(() => {
-      router.push({ name: "Landing" });
+      router.push({ name: "login" });
     }, 1000);
   });
 };

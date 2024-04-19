@@ -5,9 +5,9 @@
 			<h1 class="heading">Earn. Connect.<br>Contribute to<br>Society</h1>
 			<p>Partner with us to drive your own livelihood and more.</p>
 			<br>
-			<button class="btn-r">Sign up Now</button>
+      
 		</div>
-		<div class="col6">
+		<div class="col6 mb-5">
 			<img src="../../assets/img/homelanding.png" class="taxi-img">
 		</div>
 		<div class="clearfix"></div>
@@ -160,3 +160,9 @@ header{padding: 10px 0px 0px 0px;}
 
 
 </style>
+
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+</script>
