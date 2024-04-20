@@ -44,26 +44,26 @@ class TrajetController extends Controller
     public function showByDriver($id)
     {
         // Get trajet by idConducteur
-        $trajet = Trajet::where('idConducteur',$id)->get();
+        $trajet = Trajet::where('idConducteur', $id)->get();
         return response()->json($trajet, 200);
     }
 
     public function annulerReservation($id, $userId)
     {
         $reservation = ListePassager::where('idTrajet', $id)
-                                    ->where('idPassager', $userId)
-                                    ->first();
-    
+            ->where('idPassager', $userId)
+            ->first();
+
         if ($reservation) {
             $reservation->delete();
-    
+
             $trajet = Trajet::find($id);
             if ($trajet->etat == -1) {
                 $trajet->etat = 1;
                 $trajet->nbPlaces = $trajet->nbPlaces + 1;
                 $trajet->save();
             }
-    
+
             return response()->json(['message' => 'Reservation canceled successfully'], 200);
         } else {
             return response()->json(['error' => 'Reservation not found'], 404);
@@ -74,6 +74,10 @@ class TrajetController extends Controller
     {
         //delete a specific trajet by id from the database
         $trajet = Trajet::find($id);
+        $listepassager = ListePassager::where('idTrajet', $id)->get();
+        foreach ($listepassager as $passager) {
+            $passager->delete();
+        }
         $trajet->delete();
         return response()->json(null, 204);
     }
