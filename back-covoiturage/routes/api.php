@@ -42,7 +42,7 @@ Route::put('/updatePlacesTrajet/{id}', [TrajetController::class, 'updatePlacesTr
 Route::get('/trajetsbydriver/{id}', [TrajetController::class, 'showByDriver']);
 Route::put('/annulerReservation/{id}/{userId}', [TrajetController::class, 'annulerReservation']);
 Route::delete('/deltrajet/{id}', [TrajetController::class, 'annulerTrajet']);
-
+Route::get('/checkActiveRide/{id}', [TrajetController::class, 'checkActiveRidesAsRider']);
 
 //Route for Voiture
 Route::get('/voitures', [VoitureController::class, 'index']);

@@ -116,7 +116,7 @@ class TrajetController extends Controller
     public function updateEtatTrajet(Request $request, $id)
     {
 
-        $trajet = Trajet::find($request->input('id'));
+        $trajet = Trajet::find($id);
         $trajet->etat = $request->input('etat');
         $trajet->update();
         return response()->json($trajet, 200);
@@ -145,5 +145,11 @@ class TrajetController extends Controller
         }
         $trajet->update();
         return response()->json($trajet, 200);
+    }
+
+    public function checkActiveRidesAsRider($userId)
+    {
+        $trajets = Trajet::where('idConducteur', $userId)->where('etat', 0)->get();
+        return response()->json($trajets, 200);
     }
 }

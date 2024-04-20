@@ -14,8 +14,8 @@ return new class extends Migration
           $table->id();
           $table->string('commentaire');
           $table->integer('note');
-          $table->unsignedBigInteger('IdUser');
-          $table->foreign('id')
+          $table->unsignedBigInteger('idUser');
+          $table->foreign('idUser')
             ->references('id')
             ->on('users')
             ->onDelete('restrict')
