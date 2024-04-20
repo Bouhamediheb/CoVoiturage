@@ -3,19 +3,18 @@
     <div class="d-flex justify-content-center spaced"> <!--  " class="col-sm-6 col-md-4 col-lg-3 mb-3"> Center the cards -->
       <div class="row mt-2 ">
         
-        <div v-for="ride in rides" :key="ride.id">
+    <div v-for="(ride, index) in rides" :key="ride.id">
           <!-- show rides that user didn't reserve from localStorage-->
           <div v-if="shouldDisplayRide(ride)" class="col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card">
-              <img :src="carImages[ride.id - 1]" class="card-img-top" alt="Car image" />
-
+              <img :src="carImages[ride.id-3]" class="card-img-top" alt="Car image" />
               <div class="card-body pt-0 px-1 ">
                     <div
                       class="d-flex flex-row justify-content-between mb-0 pl-3 pr-3 mt-1"
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Chauffeur</small>
-                        {{ nom[ride.id - 1] }} {{ prenom[ride.id - 1] }}
+                        {{ nom[index]  }} , {{ prenom[index] }}
                       </div>
                     </div>
                     <div
@@ -23,7 +22,7 @@
                     >
                       <div class="d-flex flex-column">
                         <small class="text-muted mb-1">Téléphone</small>
-                        {{ telephone[ride.id - 1] }}
+                        {{ telephone[index] }}
                       </div>
                     </div>
                     <div
@@ -31,11 +30,11 @@
                     >
                       <div class="d-flex flex-column">
                         <span class="text-muted mb-1">Véhicule</span>
-                        {{ marque[ride.id - 1] }} , {{ modele[ride.id - 1] }}
+                        {{ marque[index] }} , {{ modele[index] }}
                       </div>
                       <div class="d-flex flex-column">
                         <span class="text-muted mb-1">Série</span>
-                        {{ matricule[ride.id - 1] }}
+                        {{ matricule [index] }}
                       </div>
                     </div>
                     <div
@@ -155,6 +154,8 @@ onMounted(async () => {
         }
       );
       rides.value = response.data;
+
+      console.log("im here" , rides.value);
     }
 
     for (const ride of rides.value) {
@@ -162,7 +163,7 @@ onMounted(async () => {
       const allow = voiture.matricule;
       const modele1 = voiture.modele;
       const marque1 = voiture.marque;
-      console.log(marque1);
+  
       const climatisation1 = voiture.climatisation;
       const animaux1 = voiture.animaux;
       const fumeur1 = voiture.fumeur;
@@ -181,22 +182,26 @@ onMounted(async () => {
       matricule.value.push(allow);
       modele.value.push(modele1);
       marque.value.push(marque1);
+    
       nom.value.push(nom1);
       prenom.value.push(prenom1);
       telephone.value.push(telephone1);
+
     }
     ridesLoaded.value = true;
+    console.log("rides",rides.value)
   } catch (error) {
     console.error(error);
   }
 
-  // Fetch car images for each ride
-  for (const ride of rides.value) {
-    // Use the car model or name as the query parameter
-    const modelName = `${marque.value[ride.id - 1]} ${modele.value[ride.id - 1]}`;
+for (const [ride, index] of rides.value.entries()) {
+  console.log("RIDE NO",ride);
+  console.log(marque.value[ride]);
+    const modelName = `${marque.value[ride]} ${modele.value[ride]}`;
+      console.log("modelnmae",modelName);
     const images = await fetchCarImages(modelName);
     // Push the fetched image URL to the carImages array
-    carImages.value.push(images.length > 0 ? images[0] : ''); // Use the first image in the array, or an empty string if no images are found
+    carImages.value.push(images.length > 0 ? images[0] : ''); 
   }
 
 });
@@ -256,7 +261,7 @@ const fetchCarImages = async (modelName) => {
 
 const shouldDisplayRide = (ride) => {
   const trajet_id = localStorage.getItem('trajet_id');
-  if (!trajet_id) {
+  if (trajet_id) {
     return true; // If localStorage doesn't have any reserved rides, display all rides
   } else {
     const trajet_id_array = trajet_id.split(',');
