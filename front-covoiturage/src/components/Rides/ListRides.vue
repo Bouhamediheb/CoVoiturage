@@ -264,7 +264,6 @@ const shouldDisplayRide = (ride) => {
   }
 };
 
-// Array to store fetched car images
 
 
 </script>

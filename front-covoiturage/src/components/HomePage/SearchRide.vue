@@ -23,7 +23,7 @@
           @input="filterStartPoint"
           class="ride-picker__input"
         />
-        <div v-if="startPointFiltered.length > 0" class="autocomplete">
+        <div v-if=" showStartPointList" class="autocomplete">
           <ul>
             <li
               v-for="(city, index) in startPointFiltered"
@@ -45,7 +45,7 @@
           @input="filterEndPoint"
           class="ride-picker__input"
         />
-        <div v-if="endPointFiltered.length > 0" class="autocomplete">
+        <div v-if="showEndPointList" class="autocomplete">
           <ul>
             <li
               v-for="(city, index) in endPointFiltered"
@@ -205,26 +205,36 @@ const selectedDate = ref(new Date().toISOString().substr(0, 10));
 const startPoint = ref("");
 const endPoint = ref("");
 
+const showEndPointList=ref(true);
+const showStartPointList=ref(true);
+
+
 // Define startPointFiltered and endPointFiltered computed refs
 const startPointFiltered = computed(() => fuse.search(startPoint.value).slice(0, 5).map(result => result.item));
 const endPointFiltered = computed(() => fuse.search(endPoint.value).slice(0, 5).map(result => result.item));
 
 // Define filterStartPoint and filterEndPoint methods
 const filterStartPoint = () => {
+
   startPointFiltered.value = fuse.search(startPoint.value).map(result => result.item);
+  showStartPointList.value=true;
 };
 
 const filterEndPoint = () => {
   endPointFiltered.value = fuse.search(endPoint.value).map(result => result.item);
+  showEndPointList.value=true;
+
 };
 
 // Define selectStartPoint and selectEndPoint methods
 const selectStartPoint = (city) => {
   startPoint.value = city;
+  showStartPointList.value = false;
 };
 
 const selectEndPoint = (city) => {
   endPoint.value = city;
+  showEndPointList.value=false
 };
 const search = () => {
   console.log("Start Point:", startPoint.value);

@@ -247,6 +247,18 @@ const cancelReservation = async (id, userId) => {
     if (response.status === 200) {
       showNotification.value = true;
       notificationMessage.value = "Reservation canceled successfully";
+      
+      // Remove the cancelled trajet_id from local storage array
+      const trajet_id = localStorage.getItem('trajet_id');
+      if (trajet_id) {
+        const trajet_id_array = trajet_id.split(',');
+        const index = trajet_id_array.indexOf(id.toString());
+        if (index !== -1) {
+          trajet_id_array.splice(index, 1);
+          localStorage.setItem('trajet_id', trajet_id_array.join(','));
+        }
+      }
+      
     } else {
       // Handle other status codes if needed
       console.error("Failed to cancel reservation:", response.statusText);
