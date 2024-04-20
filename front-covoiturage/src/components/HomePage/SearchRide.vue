@@ -206,8 +206,8 @@ const startPoint = ref("");
 const endPoint = ref("");
 
 // Define startPointFiltered and endPointFiltered computed refs
-const startPointFiltered = computed(() => fuse.search(startPoint.value).map(result => result.item));
-const endPointFiltered = computed(() => fuse.search(endPoint.value).map(result => result.item));
+const startPointFiltered = computed(() => fuse.search(startPoint.value).slice(0, 5).map(result => result.item));
+const endPointFiltered = computed(() => fuse.search(endPoint.value).slice(0, 5).map(result => result.item));
 
 // Define filterStartPoint and filterEndPoint methods
 const filterStartPoint = () => {
@@ -225,6 +225,19 @@ const selectStartPoint = (city) => {
 
 const selectEndPoint = (city) => {
   endPoint.value = city;
+};
+const search = () => {
+  console.log("Start Point:", startPoint.value);
+  console.log("End Point:", endPoint.value);
+  console.log("Selected Date:", selectedDate.value);
+  router.push({
+    name: "rides",
+    query: {
+      startPoint: startPoint.value,
+      endPoint: endPoint.value,
+      date: selectedDate.value,
+    },
+  });
 };
 </script>
 
