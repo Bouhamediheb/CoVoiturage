@@ -64,10 +64,11 @@
         <!--Grid column-->
 
         <!--Grid column-->
-        <div class="col-md-5 col-12">
+        
+        <div v-if="isNotInConfig()" class="col-md-5 col-12">
           <!-- Email input -->
-          <div class="form-outline form-white mb-4">
-            <input type="email" id="form5Example2" class="form-control" />
+          <div class="form-outline form-white mb-4 ">
+            <input type="email" id="form5Example2" class="form-control form-outline" />
           </div>
         </div>
         <!--Grid column-->
@@ -206,12 +207,29 @@
 
 
 </template>
+<script>
+import { useRoute } from "vue-router";
+
+export default {
+  methods: {
+    isNotInConfig() {
+      const route = useRoute();
+      return route.path !== "/history";
+    }
+  }
+}
+</script>
+
+
 <style >
 :root{
 	--yellow:#EBB14D;
 	--darkblue:#3A3C6C;
 	--light:#cfd8ef;
 	--white:#fff;
+}
+.form-outline {
+  overflow: hidden;
 }
 *{margin: 0px; padding: 0px; font-family: system-ui;}
 .clearfix{clear: both;}
