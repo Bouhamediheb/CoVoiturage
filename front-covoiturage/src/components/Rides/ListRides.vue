@@ -7,7 +7,7 @@
           <!-- show rides that user didn't reserve from localStorage-->
           <div v-if="shouldDisplayRide(ride)" class="col-sm-6 col-md-4 col-lg-3 mb-3">
             <div class="card">
-              <img :src="carImages[ride.id-3]" class="card-img-top" alt="Car image" />
+              <img :src="carImages[index]" class="card-img-top" alt="Car image" />
               <div class="card-body pt-0 px-1 ">
                     <div
                       class="d-flex flex-row justify-content-between mb-0 pl-3 pr-3 mt-1"
