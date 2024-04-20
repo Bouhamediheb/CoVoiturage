@@ -4,87 +4,88 @@
     <span class="mt-5"> </span>
 
     <div
-      class="ride-picker"
-      style="width: 1400px; max-width: 100%; margin: 0 auto"
-    >
-      <div class="ride-picker-title">
-        <h2 class="heading-2">Pick your ride from where you are</h2>
-        <span class="mt-2"> </span>
+  class="ride-picker"
+  style="width: 1400px; max-width: 100%; margin: 0 auto"
+>
+  <div class="ride-picker-title">
+    <h2 class="heading-2">Pick your ride from where you are</h2>
+    <span class="mt-2"> </span>
 
-        <br />
+    <br />
 
-        <div class="ride-picker">
-          <div class="input-box">
-            <i class="fa fa-map-marker"></i>
-            <input
-              type="text"
-              placeholder="Starting Point"
-              v-model="startPoint"
-              @input="filterStartPoint"
-              class="ride-picker__input"
-            />
-            <div v-if="startPointFiltered.length > 0" class="autocomplete">
-              <ul>
-                <li
-                  v-for="(city, index) in startPointSlider"
-                  :key="index"
-                  @click="selectStartPoint(city)"
-                >
-                  {{ city }}
-                </li>
-              </ul>
-            </div>
-          </div>
-          <br />
-          <div class="input-box">
-            <i class="fa fa-map-marker"></i>
-            <input
-              type="text"
-              placeholder="Destination"
-              v-model="endPoint"
-              @input="filterEndPoint"
-              class="ride-picker__input"
-            />
-            <div v-if="endPointFiltered.length > 0" class="autocomplete">
-              <ul>
-                <li
-                  v-for="(city, index) in endPointSlider"
-                  :key="index"
-                  @click="selectEndPoint(city)"
-                >
-                  {{ city }}
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <span class="ml-2"> </span>
-
-          <div class="input-box">
-            <i class="fa fa-calendar"></i>
-            <input
-              type="date"
-              data-date-format="DD MMMM YYYY"
-              v-model="selectedDate"
-              class="ride-picker__input"
-            />
-          </div>
-
-          <span class="ml-5"> </span>
-
-          <button @click="search" class="b-btn">
-            Search
-            <i class="fa fa-long-arrow-right"></i>
-          </button>
+    <div class="ride-picker">
+      <div class="input-box">
+        <i class="fa fa-map-marker"></i>
+        <input
+          type="text"
+          placeholder="Starting Point"
+          v-model="startPoint"
+          @input="filterStartPoint"
+          class="ride-picker__input"
+        />
+        <div v-if="startPointFiltered.length > 0" class="autocomplete">
+          <ul>
+            <li
+              v-for="(city, index) in startPointFiltered"
+              :key="index"
+              @click="selectStartPoint(city)"
+            >
+              {{ city }}
+            </li>
+          </ul>
         </div>
       </div>
+      <br />
+      <div class="input-box">
+        <i class="fa fa-map-marker"></i>
+        <input
+          type="text"
+          placeholder="Destination"
+          v-model="endPoint"
+          @input="filterEndPoint"
+          class="ride-picker__input"
+        />
+        <div v-if="endPointFiltered.length > 0" class="autocomplete">
+          <ul>
+            <li
+              v-for="(city, index) in endPointFiltered"
+              :key="index"
+              @click="selectEndPoint(city)"
+            >
+              {{ city }}
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <span class="ml-2"> </span>
+
+      <div class="input-box">
+        <i class="fa fa-calendar"></i>
+        <input
+          type="date"
+          data-date-format="DD MMMM YYYY"
+          v-model="selectedDate"
+          class="ride-picker__input"
+        />
+      </div>
+
+      <span class="ml-2"> </span>
+
+      <button @click="search" class="b-btn">
+        Search
+        <i class="fa fa-long-arrow-right"></i>
+      </button>
     </div>
   </div>
+</div>
+</div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import Fuse from "fuse.js";
 import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -101,10 +102,6 @@ const governorates = ref([
   "Montpellier",
   "Bordeaux",
   "Lille",
-  "A",
-  "aaa",
-  "aze",
-  "azee",
   "Rennes",
   "Reims",
   "Le Havre",
@@ -197,59 +194,40 @@ const governorates = ref([
   "Évry",
 ]);
 
+// Initialize Fuse with the list of governorates
+const fuse = new Fuse(governorates.value, {
+  keys: ["name"],
+  includeScore: true,
+});
+
+// Define selectedDate, startPoint, endPoint refs
 const selectedDate = ref(new Date().toISOString().substr(0, 10));
 const startPoint = ref("");
 const endPoint = ref("");
-const startPointFiltered = ref([]);
-const endPointFiltered = ref([]);
-const startPointSliderValue = ref(5);
-const endPointSliderValue = ref(5);
 
-const startPointSlider = computed(() =>
-  startPointFiltered.value.slice(0, startPointSliderValue.value)
-);
-const endPointSlider = computed(() =>
-  endPointFiltered.value.slice(0, endPointSliderValue.value)
-);
+// Define startPointFiltered and endPointFiltered computed refs
+const startPointFiltered = computed(() => fuse.search(startPoint.value).map(result => result.item));
+const endPointFiltered = computed(() => fuse.search(endPoint.value).map(result => result.item));
 
-const search = () => {
-  console.log("Start Point:", startPoint.value);
-  console.log("End Point:", endPoint.value);
-  console.log("Selected Date:", selectedDate.value);
-  router.push({
-    name: "rides",
-    query: {
-      startPoint: startPoint.value,
-      endPoint: endPoint.value,
-      date: selectedDate.value,
-    },
-  });
-};
-
+// Define filterStartPoint and filterEndPoint methods
 const filterStartPoint = () => {
-  startPointFiltered.value = governorates.value.filter((city) =>
-    city.toLowerCase().startsWith(startPoint.value.toLowerCase())
-  );
+  startPointFiltered.value = fuse.search(startPoint.value).map(result => result.item);
 };
 
 const filterEndPoint = () => {
-  endPointFiltered.value = governorates.value.filter((city) =>
-    city.toLowerCase().startsWith(endPoint.value.toLowerCase())
-  );
+  endPointFiltered.value = fuse.search(endPoint.value).map(result => result.item);
 };
 
+// Define selectStartPoint and selectEndPoint methods
 const selectStartPoint = (city) => {
   startPoint.value = city;
-  startPointFiltered.value = [];
 };
 
 const selectEndPoint = (city) => {
   endPoint.value = city;
-  endPointFiltered.value = [];
 };
-
-onMounted(() => {});
 </script>
+
 
 <style scoped>
 .autocomplete {

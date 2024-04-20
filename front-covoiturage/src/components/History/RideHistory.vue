@@ -70,7 +70,7 @@
                     <td v-if="ride.etat==-1">{{ ride.nbPlaces }}</td>
                     <td v-if="ride.etat==-1">{{ ride.montant }} DT</td>
                     <td v-if="ride.etat==-1"> 
-                        <button @click="cancelReservation(ride.id)" class="btn btn-danger" > Cancel </button>
+                        <button @click="cancelReservation(ride.id,localStorage.getItem('user_id'))" class="btn btn-danger" > Cancel </button>
                     </td>
                   
                     </tr>
@@ -202,6 +202,7 @@ const getRidesAsPassg = () => {
 
             axios.get(`http://localhost:8000/api/trajets/${rides.value[i].idTrajet}`).then(response => {
                 ridesAsPassenger.value.push(response.data);
+                
 
 }
     )}
@@ -233,10 +234,7 @@ onMounted(() => {
 
 const cancelReservation = async (id, userId) => {
   try {
-    const response = await axios.put(`http://localhost:8000/api/trajets/${id}`, {
-      data: { userId } // Send the user ID in the request body
-    });
-
+    const response = await axios.put(`http://localhost:8000/api/annulerReservation/${id}/${userId}`);
     // Check if the cancellation was successful
     if (response.status === 200) {
       showNotification.value = true;
