@@ -158,12 +158,13 @@
                 <td v-if="ride.etat == 1">{{ ride.nbPlaces }}</td>
                 <td v-if="ride.etat == 1">{{ ride.montant }} DT</td>
                 <td v-if="ride.etat == 1">
-                  <button
-                    @click="reviewDriver(ride.id)"
-                    class="btn btn-primary"
-                  >
-                    Review
-                  </button>
+                 <!-- Other content -->
+    <button @click="reviewDriver(ride.id)" class="btn btn-primary">Review</button>
+    <div :class="{ 'modal-open': showModal }" class="modal-overlay" @click="closeModal" v-if="showModal">
+      <div class="modal-content" @click.stop>
+        <Avis :rideId="selectedRideId" />
+      </div>
+    </div>
                 </td>
               </tr>
             </tbody>
@@ -185,6 +186,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { onMounted } from "vue";
 import OpValidNotif from "../Generic/OpValidNotif.vue";
+import Avis from '../History/Avis.vue'; // Import your avis component
 
 const rides = ref([]);
 const ridesAsDriver = ref([]);
@@ -284,8 +286,19 @@ const cancelRide = (id) => {
     });
 };
 
+const showModal = ref(false);
+const selectedRideId = ref(null);
+
 const reviewDriver = (id) => {
-  //show modal component
+  selectedRideId.value = id;
+  showModal.value = true;
+  //set body css to overflow hidden
+  document.body.style.overflow = "hidden";
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  document.body.style.overflow = "auto";
 };
 </script>
 <style scoped>
@@ -346,5 +359,28 @@ nav {
 
 .ribbon .container .nav-link:hover {
   color: var(--darkblue);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2px;
+  border-radius: 5px;
+  width: auto;
+}
+
+.modal-open {
+  display: flex;
 }
 </style>
