@@ -70,13 +70,13 @@
                       class="d-flex flex-col justify-content-between pl-3 pr-3 pb-1"
                     >
                       <div class="d-flex flex-column ">
-                        <span v-if="climatisation[ride.id - 1] === 1"
+                        <span v-if="climatisation[index] === 1"
                           > <i class="fas fa-wind"></i> Climatisation</span
                         >
-                        <span v-if="animaux[ride.id - 1] === 1"> <i class="fas fa-dog"></i> Animaux</span>
-                        <span v-if="fumeur[ride.id - 1] === 1"> <i class="fas fa-smoking"></i>Fumeur</span>
-                        <span v-if="baggage[ride.id - 1] === 1"> <i class="fas fa-suitcase"></i> Baggage</span>
-                        <span v-if="bebe[ride.id - 1] === 1"> <i class="fas fa-baby"></i> Bébé</span>
+                        <span v-if="animaux[index] === 1"> <i class="fas fa-dog"></i> Animaux</span>
+                        <span v-if="fumeur[index] === 1"> <i class="fas fa-smoking"></i>Fumeur</span>
+                        <span v-if="baggage[index] === 1"> <i class="fas fa-suitcase"></i> Baggage</span>
+                        <span v-if="bebe[index] === 1"> <i class="fas fa-baby"></i> Bébé</span>
                       </div>
                     </div>
                     <div
