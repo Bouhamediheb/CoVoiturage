@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Trajet;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use App\Models\ListePassager;
 
 class TrajetController extends Controller
 {
@@ -47,19 +48,34 @@ class TrajetController extends Controller
         return response()->json($trajet, 200);
     }
 
-    public function annulerReservation($id)
+    public function annulerReservation($id, $userId)
     {
-        $trajet = Trajet::find($id);
-        if ($trajet->etat == 0) {
-            $trajet->etat = 1;
-            $trajet->nbPlaces = $trajet->nbPlaces + 1;
-            $trajet->update();
-            return response()->json($trajet, 200);
+        $reservation = ListePassager::where('idTrajet', $id)
+                                    ->where('idPassager', $userId)
+                                    ->first();
+    
+        if ($reservation) {
+            $reservation->delete();
+    
+            $trajet = Trajet::find($id);
+            if ($trajet->etat == -1) {
+                $trajet->etat = 1;
+                $trajet->nbPlaces = $trajet->nbPlaces + 1;
+                $trajet->save();
+            }
+    
+            return response()->json(['message' => 'Reservation canceled successfully'], 200);
         } else {
-            $trajet->nbPlaces = $trajet->nbPlaces + 1;
-            $trajet->update();
-            return response()->json($trajet, 200);
+            return response()->json(['error' => 'Reservation not found'], 404);
         }
+    }
+
+    public function annulerTrajet($id)
+    {
+        //delete a specific trajet by id from the database
+        $trajet = Trajet::find($id);
+        $trajet->delete();
+        return response()->json(null, 204);
     }
 
     /**

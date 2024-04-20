@@ -28,4 +28,6 @@ class ListePassagerController extends Controller
         $listePassager = ListePassager::where('idPassager', $id)->get();
         return response()->json($listePassager, 200);
     }
+
+    
 }
