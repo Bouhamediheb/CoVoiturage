@@ -1,7 +1,7 @@
 <template>
   <div class="rating-component">
-    <h2>Rate your experience</h2>
-    <div class="rating-section">
+    <h3 class="modal-header">Rate your experience</h3>
+    <div class="rating-section px-2">
       <label>Rating:</label>
       <div class="star-rating">
         <span
@@ -19,8 +19,11 @@
       class="comment-textarea"
       rows="4"
       cols="50"
+      required
     ></textarea>
-    <button @click="handleSubmit(rideId)" class="submit-button">Submit</button>
+    <div class="buttonSubmit">
+    <button @click="handleSubmit(rideId)" class="btn-r mt-2">Submit</button>
+  </div>
   </div>
 </template>
   
@@ -68,15 +71,39 @@ const handleSubmit = (id) => {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 5px;
+  align-items: center;
+  justify-content: center;
 }
 
 .rating-section {
   margin-bottom: 20px;
 }
 
+.buttonSubmit {
+  display: flex;
+  justify-content: right;
+}
+
+.modal-header h3 {
+  margin-top: 0;
+  color: #3A3C6C;
+}
+
 .star-rating {
   font-size: 24px;
 }
+
+.btn-r {
+  padding: 11px 25px;
+  background: #ebb14d;
+  color: white;
+  border: none;
+  margin-top: -16px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+
 
 .star-rating span {
   color: #ccc;
@@ -111,4 +138,3 @@ const handleSubmit = (id) => {
   background-color: #0056b3;
 }
 </style>
-  

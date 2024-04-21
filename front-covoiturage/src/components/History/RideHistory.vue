@@ -152,9 +152,22 @@
                 <td v-if=" ride.etat == 1 ">{{ ride.pointArrive }}</td>
                 <td v-if=" ride.etat == 1 ">{{ ride.montant }} DT</td>
                 <td v-if=" ride.etat == 1 ">
-                  <button @click="reviewDriver(ride.id)" class="btn btn-primary">
+                  <button
+                    @click="reviewDriver(ride.id)"
+                    class="btn-r"
+                  >
                     Review
                   </button>
+                  <div
+                    :class="{ 'modal-open': showModal }"
+                    class="modal-overlay"
+                    @click="closeModal"
+                    v-if="showModal"
+                  >
+                  <div class="modal-content" @click.stop>
+                      <Avis :rideId="ride.idConducteur" />
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -176,6 +189,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { onMounted } from "vue";
 import OpValidNotif from "../Generic/OpValidNotif.vue";
+import Avis from "../History/Avis.vue"; // Import your avis component
 
 const rides = ref([]);
 const ridesAsDriver = ref([]);
@@ -287,8 +301,19 @@ const rideMatchasPassenger = () => {
   return ridesAsPassenger.value.some((ride) => ride.etat === -1);
 };
 
+const showModal = ref(false);
+const selectedRideId = ref(null);
+
 const reviewDriver = (id) => {
-  //show modal component
+  selectedRideId.value = id;
+  showModal.value = true;
+  //set body css to overflow hidden
+  document.body.style.overflow = "hidden";
+};
+
+const closeModal = () => {
+  showModal.value = false;
+  document.body.style.overflow = "auto";
 };
 </script>
 <style scoped>
@@ -306,6 +331,17 @@ const reviewDriver = (id) => {
 .legend-label {
   font-size: 1.2rem;
   color: var(--darkblue);
+}
+
+.btn-r {
+  padding: 11px 25px;
+  background: #3a3c6c;
+  color: white;
+  border: none;
+  margin-top: -16px;
+  font-size: 15px;
+  cursor: pointer;
+  
 }
 
 .save-change {
@@ -358,5 +394,27 @@ nav {
 
 .ribbon .container .nav-link:hover {
   color: var(--darkblue);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 2px;
+  border-radius: 5px;
+  width: auto;
+}
+
+.modal-open {
+  display: flex;
 }
 </style>
