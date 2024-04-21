@@ -29,6 +29,10 @@
               </tr>
             </tbody>
           </table>
+          <OpValidNotif
+            v-if="showNotification"
+            :message="notificationMessage"
+          />
         </div>
 
         <div class="modal-footer">
@@ -44,6 +48,7 @@
 <script setup>
 import axios from "axios";
 import { ref } from "vue";
+import OpValidNotif from "./OpValidNotif.vue";
 
 const props = defineProps({
   show: Boolean,

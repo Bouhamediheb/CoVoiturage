@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Avis;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class AvisController extends Controller
 {
@@ -27,6 +28,13 @@ class AvisController extends Controller
             'idUser' => $request->input('idUser')
         ]);
         $avis->save();
+        $user = User::find($request->input('idUser'));
+        if ($user->avis == null) {
+            $user->avis = $request->input('note');
+        } else {
+            $user->avis = round(($user->avis + $request->input('note')) / 2);
+        }
+        $user->update();
         return response()->json($avis);
     }
 

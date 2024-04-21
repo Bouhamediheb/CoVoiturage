@@ -158,13 +158,23 @@
                 <td v-if="ride.etat == 1">{{ ride.nbPlaces }}</td>
                 <td v-if="ride.etat == 1">{{ ride.montant }} DT</td>
                 <td v-if="ride.etat == 1">
-                 <!-- Other content -->
-    <button @click="reviewDriver(ride.id)" class="btn btn-primary">Review</button>
-    <div :class="{ 'modal-open': showModal }" class="modal-overlay" @click="closeModal" v-if="showModal">
-      <div class="modal-content" @click.stop>
-        <Avis :rideId="selectedRideId" />
-      </div>
-    </div>
+                  <!-- Other content -->
+                  <button
+                    @click="reviewDriver(ride.id)"
+                    class="btn btn-primary"
+                  >
+                    Review
+                  </button>
+                  <div
+                    :class="{ 'modal-open': showModal }"
+                    class="modal-overlay"
+                    @click="closeModal"
+                    v-if="showModal"
+                  >
+                    <div class="modal-content" @click.stop>
+                      <Avis :rideId="ride.idConducteur" />
+                    </div>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -186,7 +196,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { onMounted } from "vue";
 import OpValidNotif from "../Generic/OpValidNotif.vue";
-import Avis from '../History/Avis.vue'; // Import your avis component
+import Avis from "../History/Avis.vue"; // Import your avis component
 
 const rides = ref([]);
 const ridesAsDriver = ref([]);
@@ -249,18 +259,17 @@ const cancelReservation = async (id, userId) => {
     if (response.status === 200) {
       showNotification.value = true;
       notificationMessage.value = "Reservation canceled successfully";
-      
+
       // Remove the cancelled trajet_id from local storage array
-      const trajet_id = localStorage.getItem('trajet_id');
+      const trajet_id = localStorage.getItem("trajet_id");
       if (trajet_id) {
-        const trajet_id_array = trajet_id.split(',');
+        const trajet_id_array = trajet_id.split(",");
         const index = trajet_id_array.indexOf(id.toString());
         if (index !== -1) {
           trajet_id_array.splice(index, 1);
-          localStorage.setItem('trajet_id', trajet_id_array.join(','));
+          localStorage.setItem("trajet_id", trajet_id_array.join(","));
         }
       }
-      
     } else {
       // Handle other status codes if needed
       console.error("Failed to cancel reservation:", response.statusText);
@@ -370,7 +379,6 @@ nav {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .modal-content {
