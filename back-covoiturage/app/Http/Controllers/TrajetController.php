@@ -59,7 +59,6 @@ class TrajetController extends Controller
 
             $trajet = Trajet::find($id);
             if ($trajet->etat == -1) {
-                $trajet->etat = 1;
                 $trajet->nbPlaces = $trajet->nbPlaces + 1;
                 $trajet->save();
             }

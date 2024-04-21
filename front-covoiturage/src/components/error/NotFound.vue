@@ -1,12 +1,11 @@
 <template>
     <div class="container mt-5">
       <div class="row justify-content-center">
-        <div class="col-md-10">
+        <div class="col-md-10 mb-5 mt-5">
          
 
-            <!-- 404 NOT ALLOWED MESSAGE -->
 
-            <div class="card mt-2 mb-2">
+            <div class="card mt-5 mb-5">
               <div class="card-body">
                 <h1 class="text-center">404</h1>
                 <h3 class="text-center">Page Not Found</h3>
