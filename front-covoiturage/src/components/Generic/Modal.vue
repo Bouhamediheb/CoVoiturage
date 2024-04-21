@@ -3,7 +3,7 @@
     <div v-if="show" class="modal-mask">
       <div class="modal-container">
         <div class="modal-header">
-          <slot name="header">default header</slot>
+          <slot name="header">default header</slot> <!-- The slot can be used for additional header content -->
         </div>
 
         <div class="modal-body">
@@ -67,7 +67,6 @@ const endTrip = (id) => {
       showNotification.value = true;
       notificationMessage.value = "Trip Ended";
       setTimeout(() => {
-        //reload page
         location.reload();
       }, 1000);
     })
@@ -91,7 +90,7 @@ const endTrip = (id) => {
 }
 
 .modal-container {
-  width: 600;
+  width: 600px; /* Corrected value with 'px' unit */
   margin: auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -100,9 +99,14 @@ const endTrip = (id) => {
   transition: all 0.3s ease;
 }
 
+.modal-header {
+  text-align: center; /* Center the header content */
+  justify-content: center;
+}
+
 .modal-header h3 {
   margin-top: 0;
-  color: #42b983;
+  color: #3A3C6C;
 }
 
 .modal-body {

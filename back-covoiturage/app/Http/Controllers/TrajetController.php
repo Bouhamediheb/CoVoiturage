@@ -58,10 +58,10 @@ class TrajetController extends Controller
             $reservation->delete();
 
             $trajet = Trajet::find($id);
-            if ($trajet->etat == -1) {
                 $trajet->nbPlaces = $trajet->nbPlaces + 1;
-                $trajet->save();
-            }
+                $trajet->etat = -1;
+                $trajet->update();
+            
 
             return response()->json(['message' => 'Reservation canceled successfully'], 200);
         } else {

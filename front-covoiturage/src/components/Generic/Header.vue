@@ -80,7 +80,7 @@
                     @close="showModal = false"
                   >
                     <template #header>
-                      <h3>Active Rides</h3>
+                      <h3>Pending Rides</h3>
                     </template>
                   </modal>
                 </Teleport>

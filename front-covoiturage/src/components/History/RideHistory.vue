@@ -21,17 +21,15 @@
                 <th scope="col">Date</th>
                 <th scope="col">Departure</th>
                 <th scope="col">Arrival</th>
-                <th scope="col">Number of places</th>
                 <th scope="col">Price</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody v-if="ridesAsDriver.length > 0">
-              <tr v-for="ride in ridesAsDriver" :key="ride.id">
+              <tr v-for="ride in ridesAsDriver" :key="ride.id" v-if="rideMatchasDriver()">
                 <td v-if="ride.etat == -1">{{ ride.dateDepart }}</td>
                 <td v-if="ride.etat == -1">{{ ride.pointDepart }}</td>
                 <td v-if="ride.etat == -1">{{ ride.pointArrive }}</td>
-                <td v-if="ride.etat == -1">{{ ride.nbPlaces }}</td>
                 <td v-if="ride.etat == -1">{{ ride.montant }} DT</td>
                 <td v-if="ride.etat == -1">
                   <button @click="cancelRide(ride.id)" class="btn btn-danger">
@@ -39,6 +37,10 @@
                   </button>
                 </td>
               </tr>
+              <tr v-else>
+                <td colspan="6" class="text-center">No rides found</td>
+              </tr>
+
             </tbody>
             <tbody v-else>
               <tr>
@@ -57,36 +59,32 @@
                 <th scope="col">Date</th>
                 <th scope="col">Departure</th>
                 <th scope="col">Arrival</th>
-                <th scope="col">Number of places</th>
                 <th scope="col">Price</th>
                 <th scope="col">Action</th>
               </tr>
             </thead>
             <tbody v-if="ridesAsPassenger.length > 0">
-              <tr v-for="ride in ridesAsPassenger" :key="ride.id">
-                <td v-if="ride.etat == -1 || ride.etat == 0">
-                  {{ ride.dateDepart }}
+              <tr v-for=" ride  in  ridesAsPassenger " :key=" ride.id " v-if="rideMatchasPassenger()" >
+              <td v-if="ride.etat == -1 || ride.etat==0 ">
+                {{ ride.dateDepart }}
                 </td>
-                <td v-if="ride.etat == -1 || ride.etat == 0">
+                <td v-if=" ride.etat == -1 || ride.etat == 0 ">
                   {{ ride.pointDepart }}
                 </td>
-                <td v-if="ride.etat == -1 || ride.etat == 0">
+                <td v-if=" ride.etat == -1 || ride.etat == 0 ">
                   {{ ride.pointArrive }}
                 </td>
-                <td v-if="ride.etat == -1 || ride.etat == 0">
-                  {{ ride.nbPlaces }}
-                </td>
-                <td v-if="ride.etat == -1 || ride.etat == 0">
+                <td v-if=" ride.etat == -1 || ride.etat == 0 ">
                   {{ ride.montant }} DT
                 </td>
-                <td v-if="ride.etat == -1 || ride.etat == 0">
-                  <button
-                    @click="cancelReservation(ride.id, userId)"
-                    class="btn btn-danger"
-                  >
+                <td v-if=" ride.etat == -1 || ride.etat == 0 ">
+                  <button @click="cancelReservation(ride.id, userId)" class="btn btn-danger">
                     Cancel
                   </button>
                 </td>
+              </tr>
+              <tr v-else>
+                <td colspan="6" class="text-center">No rides found</td>
               </tr>
             </tbody>
             <tbody v-else>
@@ -113,17 +111,15 @@
                 <th scope="col">Date</th>
                 <th scope="col">Departure</th>
                 <th scope="col">Arrival</th>
-                <th scope="col">Number of places</th>
                 <th scope="col">Price</th>
               </tr>
             </thead>
-            <tbody v-if="ridesAsDriver.length > 0">
-              <tr v-for="ride in ridesAsDriver" :key="ride.id">
-                <td v-if="ride.etat == 1">{{ ride.dateDepart }}</td>
-                <td v-if="ride.etat == 1">{{ ride.pointDepart }}</td>
-                <td v-if="ride.etat == 1">{{ ride.pointArrive }}</td>
-                <td v-if="ride.etat == 1">{{ ride.nbPlaces }}</td>
-                <td v-if="ride.etat == 1">{{ ride.montant }} DT</td>
+            <tbody v-if=" ridesAsDriver.length > 0 ">
+              <tr v-for=" ride  in  ridesAsDriver " :key=" ride.id ">
+                <td v-if=" ride.etat == 1 ">{{ ride.dateDepart }}</td>
+                <td v-if=" ride.etat == 1 ">{{ ride.pointDepart }}</td>
+                <td v-if=" ride.etat == 1 ">{{ ride.pointArrive }}</td>
+                  <td v-if=" ride.etat == 1 ">{{ ride.montant }} DT</td>
               </tr>
             </tbody>
             <tbody v-else>
@@ -145,36 +141,20 @@
                 <th scope="col">Date</th>
                 <th scope="col">Departure</th>
                 <th scope="col">Arrival</th>
-                <th scope="col">Number of places</th>
                 <th scope="col">Price</th>
                 <th scope="col">Review</th>
               </tr>
             </thead>
-            <tbody v-if="ridesAsPassenger.length > 0">
-              <tr v-for="ride in ridesAsPassenger" :key="ride.id">
-                <td v-if="ride.etat == 1">{{ ride.dateDepart }}</td>
-                <td v-if="ride.etat == 1">{{ ride.pointDepart }}</td>
-                <td v-if="ride.etat == 1">{{ ride.pointArrive }}</td>
-                <td v-if="ride.etat == 1">{{ ride.nbPlaces }}</td>
-                <td v-if="ride.etat == 1">{{ ride.montant }} DT</td>
-                <td v-if="ride.etat == 1">
-                  <!-- Other content -->
-                  <button
-                    @click="reviewDriver(ride.id)"
-                    class="btn btn-primary"
-                  >
+            <tbody v-if=" ridesAsPassenger.length > 0 ">
+              <tr v-for=" ride  in  ridesAsPassenger " :key=" ride.id ">
+                <td v-if=" ride.etat == 1 ">{{ ride.dateDepart }}</td>
+                <td v-if=" ride.etat == 1 ">{{ ride.pointDepart }}</td>
+                <td v-if=" ride.etat == 1 ">{{ ride.pointArrive }}</td>
+                <td v-if=" ride.etat == 1 ">{{ ride.montant }} DT</td>
+                <td v-if=" ride.etat == 1 ">
+                  <button @click="reviewDriver(ride.id)" class="btn btn-primary">
                     Review
                   </button>
-                  <div
-                    :class="{ 'modal-open': showModal }"
-                    class="modal-overlay"
-                    @click="closeModal"
-                    v-if="showModal"
-                  >
-                    <div class="modal-content" @click.stop>
-                      <Avis :rideId="ride.idConducteur" />
-                    </div>
-                  </div>
                 </td>
               </tr>
             </tbody>
@@ -185,7 +165,7 @@
             </tbody>
           </table>
         </fieldset>
-        <OpValidNotif v-if="showNotification" :message="notificationMessage" />
+        <OpValidNotif v-if=" showNotification " :message=" notificationMessage " />
       </div>
     </div>
   </div>
@@ -196,7 +176,6 @@ import { ref } from "vue";
 import axios from "axios";
 import { onMounted } from "vue";
 import OpValidNotif from "../Generic/OpValidNotif.vue";
-import Avis from "../History/Avis.vue"; // Import your avis component
 
 const rides = ref([]);
 const ridesAsDriver = ref([]);
@@ -245,9 +224,11 @@ const getRidesAsDriver = () => {
     });
 };
 
+
 onMounted(() => {
   getRidesAsPassg();
   getRidesAsDriver();
+
 });
 
 const cancelReservation = async (id, userId) => {
@@ -261,15 +242,16 @@ const cancelReservation = async (id, userId) => {
       notificationMessage.value = "Reservation canceled successfully";
 
       // Remove the cancelled trajet_id from local storage array
-      const trajet_id = localStorage.getItem("trajet_id");
+      const trajet_id = localStorage.getItem('trajet_id');
       if (trajet_id) {
-        const trajet_id_array = trajet_id.split(",");
+        const trajet_id_array = trajet_id.split(',');
         const index = trajet_id_array.indexOf(id.toString());
         if (index !== -1) {
           trajet_id_array.splice(index, 1);
-          localStorage.setItem("trajet_id", trajet_id_array.join(","));
+          localStorage.setItem('trajet_id', trajet_id_array.join(','));
         }
       }
+
     } else {
       // Handle other status codes if needed
       console.error("Failed to cancel reservation:", response.statusText);
@@ -295,19 +277,18 @@ const cancelRide = (id) => {
     });
 };
 
-const showModal = ref(false);
-const selectedRideId = ref(null);
-
-const reviewDriver = (id) => {
-  selectedRideId.value = id;
-  showModal.value = true;
-  //set body css to overflow hidden
-  document.body.style.overflow = "hidden";
+const rideMatchasDriver = () => {
+  // if any ride has etat == -1
+  return ridesAsDriver.value.some((ride) => ride.etat === -1);
 };
 
-const closeModal = () => {
-  showModal.value = false;
-  document.body.style.overflow = "auto";
+const rideMatchasPassenger = () => {
+  // if any ride has etat == -1
+  return ridesAsPassenger.value.some((ride) => ride.etat === -1);
+};
+
+const reviewDriver = (id) => {
+  //show modal component
 };
 </script>
 <style scoped>
@@ -317,13 +298,16 @@ const closeModal = () => {
   --light: #cfd8ef;
   --white: #fff;
 }
+
 .custom-border {
   border: 1px solid #ced4da;
 }
+
 .legend-label {
   font-size: 1.2rem;
   color: var(--darkblue);
 }
+
 .save-change {
   background: #ebb14d;
   color: white;
@@ -333,6 +317,7 @@ const closeModal = () => {
   cursor: pointer;
   width: 200px;
 }
+
 nav {
   margin-left: 22%;
   margin-right: 22%;
@@ -344,51 +329,34 @@ nav {
   color: white;
   padding: 10px 0;
   margin-top: 10px;
-  border-radius: 10px; /* Add border radius */
-  border: 1px solid #ced4da; /* Add border */
+  border-radius: 10px;
+  /* Add border radius */
+  border: 1px solid #ced4da;
+  /* Add border */
 }
 
 .ribbon .container {
   display: flex;
-  justify-content: flex-start; /* Align links to the left */
+  justify-content: flex-start;
+  /* Align links to the left */
 }
 
 .ribbon .container .nav-link {
   color: black;
   text-decoration: none;
   transition: color 0.3s ease;
-  margin-right: 10px; /* Add space between links */
+  margin-right: 10px;
+  /* Add space between links */
 }
 
 .ribbon .container .separator {
   margin-top: 5px;
   color: black;
-  margin-right: 10px; /* Add space between links */
+  margin-right: 10px;
+  /* Add space between links */
 }
 
 .ribbon .container .nav-link:hover {
   color: var(--darkblue);
-}
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content {
-  background-color: white;
-  padding: 2px;
-  border-radius: 5px;
-  width: auto;
-}
-
-.modal-open {
-  display: flex;
 }
 </style>
