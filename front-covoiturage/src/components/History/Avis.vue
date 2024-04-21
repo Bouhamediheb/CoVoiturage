@@ -49,6 +49,7 @@ const handleSubmit = (id) => {
     .post("http://localhost:8000/api/avis", data)
     .then((response) => {
       console.log("Avis submitted successfully:", response.data);
+      window.location.reload();
       // Handle any success actions here
     })
     .catch((error) => {
