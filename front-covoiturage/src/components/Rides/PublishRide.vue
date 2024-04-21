@@ -15,7 +15,7 @@
                 <form @submit.prevent="publishRide">
                   <div class="form-group">
                     <label for="origin">Origin:</label>
-                    <input type="text" id="origin" v-model="origin" placeholder="Enter your starting location" class="form-control" @input="filterOrigin">
+                    <input type="text" id="origin" v-model="origin" placeholder="Enter your starting location" class="form-control" @input="filterOrigin" required>
                     <div v-if="(originFiltered.length > 0) && originDropdownVisible" class="autocomplete" v-show="originDropdownVisible"> 
                       <ul>
                         <li v-for="(city, index) in originFiltered" :key="index" @click="selectOrigin(city)">{{ city }}</li>
@@ -25,7 +25,7 @@
                      </div>
                   <div class="form-group">
                     <label for="destination">Destination:</label>
-                    <input type="text" id="destination" v-model="destination" placeholder="Enter your destination" class="form-control" @input="filterDestination">
+                    <input type="text" id="destination" v-model="destination" placeholder="Enter your destination" class="form-control" @input="filterDestination" required>
                     <div v-if="(destinationFiltered.length > 0) &&  destinationDropdownVisible" class="autocomplete" v-show="destinationDropdownVisible">
                       <ul>
                         <li v-for="(city, index) in destinationFiltered" :key="index" @click="selectDestination(city)">{{ city }}</li>
@@ -43,21 +43,21 @@
 </div>
                   <div class="form-group">
                     <label for="passengers">Number of Passengers:</label>
-                    <input type="number" id="passengers" v-model.number="numPassengers" min="1" max="4" placeholder="Enter available seats" class="form-control">
+                    <input type="number" id="passengers" v-model.number="numPassengers" min="1" max="4" placeholder="Enter available seats" class="form-control" required>
                   </div>
                   <div class="form-group">
                     <label for="departureDate">Departure Date:</label>
-                    <input type="date" id="departureDate" v-model="departureDate" class="form-control">
+                    <input type="date" id="departureDate" v-model="departureDate" class="form-control" required>
                   </div>
 
                   <div class="form-group">
                     <label for="departureDate"> Fee :</label>
-                    <input type="number" id="fee" v-model="fee" class="form-control" placeholder="Enter the fee" >
+                    <input type="number" id="fee" v-model="fee" class="form-control" placeholder="Enter the fee" required>
                   </div>
 
                   <div class="form-group">
                     <label for="departureDate"> Description :</label>
-                    <textarea id="description" v-model="description" class="form-control"></textarea>
+                    <textarea id="description" v-model="description" class="form-control" required></textarea>
                   </div>
                   
                   <button type="submit" class="btn save-change" style="height: 40px;" :disabled="isFormIncomplete">Publish Ride</button>

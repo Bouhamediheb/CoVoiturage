@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid" >
     <div class="d-flex justify-content-center spaced"> <!--  " class="col-sm-6 col-md-4 col-lg-3 mb-3"> Center the cards -->
-      <div class="row mt-2 ">
+      <div v-if="rides.length > 0" class="row mt-2 d-flex justify-content-center spaced">
         
     <div v-for="(ride, index) in rides" :key="ride.id">
           <!-- show rides that user didn't reserve from localStorage-->
@@ -92,14 +92,19 @@
                     <button @click="reserver(ride.id)" class="btn reserve">
                       Réserver votre place!
                     </button>
-                    <OpValidNotif v-if="showNotification" :message="notificationMessage" />
 
                   </div>
                 </div>
               </div>
+              <OpValidNotif v-if="showNotification" :message="notificationMessage" />
+
           </div>
       </div>
+      <div v-else>
+      <NoRides/>
     </div>
+    </div>
+   
   </div>
 </template>
 
@@ -110,6 +115,7 @@ const route = useRoute();
 const accessKey = 'q-vVbg13r4TvpkLVJiV6YvDvo9RF2dZ5gAjRWIFbZYk';
 const carImages = ref([]);
 import OpValidNotif from '../Generic/OpValidNotif.vue';
+import NoRides from '../error/NoRides.vue';
 
 const showNotification = ref(false);
 const notificationMessage = ref('');
@@ -232,9 +238,13 @@ const reserver = (id) => {
     idTrajet: id,
     idPassager: userId,
   });
+  console.log("9bal",showNotification.value)
+
   showNotification.value = true;
-  notificationMessage.value = "You've taken a seat!";
-  // push the trajet id in local storage array 
+  // print driver name and car model and date
+  notificationMessage.value = "You've taken a seat in this ride! Check your profile if you want to cancel.";
+  console.log("Ba3d",showNotification.value);
+
   const trajet_id = localStorage.getItem('trajet_id');
   if (trajet_id) {
     const trajet_id_array = trajet_id.split(',');
@@ -261,12 +271,17 @@ const fetchCarImages = async (modelName) => {
 
 const shouldDisplayRide = (ride) => {
   const trajet_id = localStorage.getItem('trajet_id');
-  if (trajet_id) {
-    return true; // If localStorage doesn't have any reserved rides, display all rides
-  } else {
-    const trajet_id_array = trajet_id.split(',');
-    return ride.nbPlaces > 0 && !trajet_id_array.includes(ride.id.toString());
+  
+  // Check if trajet_id is null
+  if (trajet_id === null) {
+    // If no trajet_id is found, assume that the ride can be displayed
+    return ride.nbPlaces > 0;
   }
+
+  // Otherwise, split the trajet_id and check if the ride's id is in the list
+  const trajet_id_array = trajet_id.split(',');
+
+  return ride.nbPlaces > 0 && !trajet_id_array.includes(ride.id.toString());
 };
 
 
