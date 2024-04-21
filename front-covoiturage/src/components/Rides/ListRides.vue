@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid">
-    <div class="d-flex justify-content-center spaced">
+    <div class="d-flex justify-content-center spaced" >
       <!--  " class="col-sm-6 col-md-4 col-lg-3 mb-3"> Center the cards -->
       <div
         v-if="rides.length > 0"
@@ -8,7 +8,7 @@
       >
         <div v-for="(ride, index) in rides" :key="ride.id">
           <!-- show rides that user didn't reserve from localStorage-->
-          <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+          <div class="col-sm-6 col-md-4 col-lg-3 mb-3" v-if="shouldDisplayRide(ride)">
             <div class="card">
               <img
                 :src="carImages[index]"
@@ -23,10 +23,17 @@
                     <small class="text-muted mb-1">Chauffeur</small>
                     <div>{{ nom[index] }} {{ prenom[index] }}</div>
                   </div>
-                  <div class="d-flex flex-column">
-                    <div class="star-rating mt-3">
+                  <div class="d-flex flex-column" >
+                    <small class="text-muted mb-1">Rating</small>
+
+                    <div class="star-rating " v-if="avis[index] > 0">
                       <span v-for="index in avis[index]" :key="index">
                         <i :class="{ 'fas fa-star': index }"></i>
+                      </span>
+                    </div>
+                    <div class="" v-else>
+                      <span>
+                        <p>No Rating Yet </p>
                       </span>
                     </div>
                   </div>

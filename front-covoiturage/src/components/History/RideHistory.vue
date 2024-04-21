@@ -27,11 +27,11 @@
             </thead>
             <tbody v-if="ridesAsDriver.length > 0">
               <tr v-for="ride in ridesAsDriver" :key="ride.id" v-if="rideMatchasDriver()">
-                <td v-if="ride.etat == -1">{{ ride.dateDepart }}</td>
-                <td v-if="ride.etat == -1">{{ ride.pointDepart }}</td>
-                <td v-if="ride.etat == -1">{{ ride.pointArrive }}</td>
-                <td v-if="ride.etat == -1">{{ ride.montant }} DT</td>
-                <td v-if="ride.etat == -1">
+                <td v-if="ride.etat == -1 || ride.etat == 0">{{ ride.dateDepart }}</td>
+                <td v-if="ride.etat == -1 || ride.etat == 0">{{ ride.pointDepart }}</td>
+                <td v-if="ride.etat == -1 || ride.etat == 0">{{ ride.pointArrive }}</td>
+                <td v-if="ride.etat == -1 || ride.etat == 0">{{ ride.montant }} DT</td>
+                <td v-if="ride.etat == -1 || ride.etat == 0">
                   <button @click="cancelRide(ride.id)" class="btn btn-danger">
                     Delete Ride
                   </button>
@@ -65,7 +65,7 @@
             </thead>
             <tbody v-if="ridesAsPassenger.length > 0">
               <tr v-for=" ride  in  ridesAsPassenger " :key=" ride.id " v-if="rideMatchasPassenger()" >
-              <td v-if="ride.etat == -1 || ride.etat==0 ">
+              <td v-if="ride.etat == 0 ">
                 {{ ride.dateDepart }}
                 </td>
                 <td v-if=" ride.etat == -1 || ride.etat == 0 ">
@@ -115,13 +115,17 @@
               </tr>
             </thead>
             <tbody v-if=" ridesAsDriver.length > 0 ">
-              <tr v-for=" ride  in  ridesAsDriver " :key=" ride.id ">
+              <tr v-for=" ride  in  ridesAsDriver " :key=" ride.id " v-if="rideMatchasDriverHistory()">
                 <td v-if=" ride.etat == 1 ">{{ ride.dateDepart }}</td>
                 <td v-if=" ride.etat == 1 ">{{ ride.pointDepart }}</td>
                 <td v-if=" ride.etat == 1 ">{{ ride.pointArrive }}</td>
                   <td v-if=" ride.etat == 1 ">{{ ride.montant }} DT</td>
               </tr>
+              <tr v-else>
+                <td colspan="4" class="text-center">No rides found</td>
+              </tr>
             </tbody>
+            
             <tbody v-else>
               <tr>
                 <td colspan="6" class="text-center">No rides found</td>
@@ -292,14 +296,20 @@ const cancelRide = (id) => {
 };
 
 const rideMatchasDriver = () => {
-  // if any ride has etat == -1
-  return ridesAsDriver.value.some((ride) => ride.etat === -1);
+  // if any ride has etat == -1 or 0
+  return ridesAsDriver.value.some((ride) => ride.etat === -1 || ride.etat === 0);
 };
 
 const rideMatchasPassenger = () => {
-  // if any ride has etat == -1
-  return ridesAsPassenger.value.some((ride) => ride.etat === -1);
+  // if any ride has etat == -1 or 0
+  return ridesAsPassenger.value.some((ride) => ride.etat === -1 || ride.etat === 0);
 };
+
+const rideMatchasDriverHistory = () => {
+
+  return ridesAsDriver.value.some((ride) => ride.etat === 1);
+};
+
 
 const showModal = ref(false);
 const selectedRideId = ref(null);

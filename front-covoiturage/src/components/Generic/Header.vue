@@ -576,6 +576,8 @@ const logout = () => {
   localStorage.removeItem("prenom");
   localStorage.removeItem("isLoggedin");
   localStorage.removeItem("token");
+  localStorage.removeItem("user_id");
+  localStorage.removeItem("trajet_id");
 
   window.location.href = "/";
   console.log("logout");
